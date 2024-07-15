@@ -3,4 +3,4 @@
 # __all__ = ("celery_app",)
 __version__ = "0.1.0"
 __author__ = "Maykin"
-__homepage__ = "https://github.com/maykinmedia/open_producten"
+__homepage__ = "https://github.com/maykinmedia/open-producten"

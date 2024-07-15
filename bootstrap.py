@@ -16,8 +16,8 @@ Set up my development environment for me!
 project_name = 'open_producten'
 
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('target', choices=['production', 'staging', 'test', 'jenkins', 'dev'],
-                    help='production/staging/test/jenkins/dev')
+parser.add_argument('target', choices=['production', 'test', 'dev'],
+                    help='production/test/dev')
 parser.add_argument('--project', default=project_name,
                     help='Name of the project in your src directory, "%s" by default' % project_name)
 parser.add_argument('--init', action='store_true',
@@ -90,9 +90,11 @@ def pip_compile_pin_requirements(virtualenv):
         pip_path = os.path.join(virtualenv, 'Scripts', 'pip')
     cmd_tpl = '{pip} install pip-tools'.format(pip=pip_path)
     call(cmd_tpl, shell=True)
-    print('Error: Run `. env/bin/activate && ./bin/compile_dependencies.sh` to ensure you have requirements/base.txt and requirements/dev.txt')
+    print(
+        'Error: Run `. env/bin/activate && ./bin/compile_dependencies.sh` to ensure you have requirements/base.txt and requirements/dev.txt')
     print('After that rerun bootstrap.py')
     sys.exit(1)
+
 
 def main():
     virtualenv = args.env
@@ -121,8 +123,8 @@ def main():
     call(cmd_tpl, shell=True)
 
     if args.init \
-       or not os.path.exists(os.path.join('requirements', 'base.txt')) \
-       or not os.path.exists(os.path.join('requirements', 'dev.txt')):
+        or not os.path.exists(os.path.join('requirements', 'base.txt')) \
+        or not os.path.exists(os.path.join('requirements', 'dev.txt')):
         pip_compile_pin_requirements(virtualenv)
 
     print('\n== Installing %s requirements ==\n' % args.target)
@@ -134,6 +136,7 @@ def main():
         pip_path = os.path.join(virtualenv, 'Scripts', 'pip')
         cmd_tpl = '{pip} install -r requirements\\{target}.txt'
     return call(cmd_tpl.format(pip=pip_path, target=args.target), shell=True)
+
 
 if __name__ == '__main__':
     sys.exit(main())

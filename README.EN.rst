@@ -35,7 +35,6 @@ latest          n/a             `ReDoc <https://redocly.github.io/redoc/?url=htt
                                 `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open_producten/0.1.0/src/open_producten/api/openapi.yaml>`_
 ==============  ==============  =============================
 
-Previous versions are supported for 6 month after the next version is released.
 
 See: `All versions and changes <https://github.com/maykinmedia/open_producten/blob/master/CHANGELOG.rst>`_
 
@@ -47,7 +46,7 @@ Developers
 
 This repository contains the source code for open_producten. To quickly
 get started, we recommend using the Docker image. You can also build the
-project from the source code. For this, please look at 
+project from the source code. For this, please look at
 `INSTALL.rst <INSTALL.rst>`_.
 
 Quickstart

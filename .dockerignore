@@ -14,3 +14,5 @@ local.py
 /static/
 /media/
 /private_media/
+
+.github/

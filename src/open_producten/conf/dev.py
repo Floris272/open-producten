@@ -10,9 +10,9 @@ os.environ.setdefault(
 os.environ.setdefault("IS_HTTPS", "no")
 os.environ.setdefault("VERSION_TAG", "dev")
 
-os.environ.setdefault("DB_NAME", "{{ project_name|lower }}")
-os.environ.setdefault("DB_USER", "{{ project_name|lower }}")
-os.environ.setdefault("DB_PASSWORD", "{{ project_name|lower }}")
+os.environ.setdefault("DB_NAME", "open_producten")
+os.environ.setdefault("DB_USER", "open_producten")
+os.environ.setdefault("DB_PASSWORD", "open_producten")
 
 os.environ.setdefault("ENVIRONMENT", "development")
 
@@ -28,7 +28,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGGING["loggers"].update(
     {
-        "{{ project_name|lower }}": {
+        "open_producten": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": True,

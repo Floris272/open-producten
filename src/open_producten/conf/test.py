@@ -1,5 +1,5 @@
 """
-Staging environment settings module.
+Test environment settings module.
 This *should* be nearly identical to production.
 """
 import os
