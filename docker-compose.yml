@@ -14,7 +14,7 @@ services:
 
   web:
     build: .
-    image: maykinmedia/open_producten:latest
+    image: maykinmedia/open-producten:latest
     environment:
       - DJANGO_SETTINGS_MODULE=open_producten.conf.docker
       - SECRET_KEY=${SECRET_KEY:-django-insecure-@4wj9(+*bu7*v&%on7+e_8!d1ckl%r=6+sz#d2!pw^@lb0+=}

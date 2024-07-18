@@ -44,8 +44,8 @@ development machine.
 
    .. code-block:: bash
 
-       $ git clone git@bitbucket.org:maykinmedia/open_producten.git
-       $ cd open_producten
+       $ git clone git@github.com:maykinmedia/open-producten.git
+       $ cd open-producten
 
 3. Install all required (backend) libraries.
    **Tip:** You can use the ``bootstrap.py`` script to install the requirements
@@ -162,7 +162,7 @@ The easiest way to get the project started is by using `Docker Compose`_.
 
    .. code-block:: bash
 
-       $ git clone git@bitbucket.org:maykinmedia/open_producten.git
+       $ git clone git@github.com:maykinmedia/open-producten.git
        Cloning into 'open_producten'...
        ...
 
@@ -216,7 +216,7 @@ The easiest way to get the project started is by using `Docker Compose`_.
    system you can run ``docker system prune``.
 
 .. _Docker Compose: https://docs.docker.com/compose/install/
-.. _Github: https://github.com/maykinmedia/open_producten/
+.. _Github: https://github.com/maykinmedia/open-producten/
 
 
 More Docker
@@ -245,7 +245,7 @@ Building and publishing the image
 
 Using ``bin/release-docker-image``, you can easily build and tag the image.
 
-The script is based on git branches and tags - if you're on the ``master``
+The script is based on git branches and tags - if you're on the ``main``
 branch and the current ``HEAD`` is tagged, the tag will be used as
 ``RELEASE_TAG`` and the image will be pushed. If you want to push the image
 without a git tag, you can use the ``RELEASE_TAG`` envvar.
