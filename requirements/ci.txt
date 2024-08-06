@@ -149,7 +149,6 @@ django==4.2.13
     #   django-cors-headers
     #   django-filter
     #   django-formtools
-    #   django-jenkins
     #   django-jsonform
     #   django-log-outgoing-requests
     #   django-markup
@@ -206,8 +205,6 @@ django-formtools==2.5.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-two-factor-auth
-django-jenkins==0.110.0
-    # via -r requirements/test-tools.in
 django-jsonform==2.22.0
     # via
     #   -c requirements/base.txt
@@ -404,7 +401,9 @@ isodate==0.6.1
     #   -r requirements/base.txt
     #   commonground-api-common
 isort==5.13.2
-    # via pylint
+    # via
+    #   -r requirements/test-tools.in
+    #   pylint
 itypes==1.2.0
     # via
     #   -c requirements/base.txt

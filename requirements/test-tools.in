@@ -12,3 +12,4 @@ requests-mock
 tblib
 
 black
+isort

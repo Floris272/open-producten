@@ -179,7 +179,6 @@ django==4.2.13
     #   django-extensions
     #   django-filter
     #   django-formtools
-    #   django-jenkins
     #   django-jsonform
     #   django-log-outgoing-requests
     #   django-markup
@@ -240,10 +239,6 @@ django-formtools==2.5.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   django-two-factor-auth
-django-jenkins==0.110.0
-    # via
-    #   -c requirements/ci.txt
-    #   -r requirements/ci.txt
 django-jsonform==2.22.0
     # via
     #   -c requirements/ci.txt
