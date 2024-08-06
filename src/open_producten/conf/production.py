@@ -3,6 +3,7 @@ Production environment settings module.
 Tweaks the base settings so that caching mechanisms are used where possible,
 and HTTPS is leveraged where possible to further secure things.
 """
+
 import os
 
 os.environ.setdefault("ENVIRONMENT", "production")
@@ -69,6 +70,6 @@ INSTALLED_APPS = INSTALLED_APPS + [
     "elasticapm.contrib.django",
 ]
 
-if SUBPATH and SUBPATH != "/":
-    STATIC_URL = f"{SUBPATH}{STATIC_URL}"
-    MEDIA_URL = f"{SUBPATH}{MEDIA_URL}"
+# if SUBPATH and SUBPATH != "/":
+#     STATIC_URL = f"{SUBPATH}{STATIC_URL}"
+#     MEDIA_URL = f"{SUBPATH}{MEDIA_URL}"
