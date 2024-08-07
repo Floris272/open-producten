@@ -120,7 +120,7 @@ class ProductType(BasePublishableModel):
 
     contacts = models.ManyToManyField(
         Contact,
-        verbose_name=_("Product contacts"),
+        verbose_name=_("Contacts"),
         related_name="products",
         blank=True,
         help_text=_("The contacts responsible for the product"),
@@ -128,7 +128,7 @@ class ProductType(BasePublishableModel):
 
     locations = models.ManyToManyField(
         Location,
-        verbose_name=_("Product locations"),
+        verbose_name=_("Locations"),
         related_name="products",
         blank=True,
         help_text=_("Locations where the product is available at."),

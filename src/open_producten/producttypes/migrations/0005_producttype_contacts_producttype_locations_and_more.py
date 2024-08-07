@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("locations", "0001_initial"),
         ("producttypes", "0004_alter_priceoption_amount"),
@@ -19,7 +18,7 @@ class Migration(migrations.Migration):
                 help_text="The contacts responsible for the product",
                 related_name="products",
                 to="locations.contact",
-                verbose_name="Product contacts",
+                verbose_name="Contacts",
             ),
         ),
         migrations.AddField(
@@ -30,7 +29,7 @@ class Migration(migrations.Migration):
                 help_text="Locations where the product is available at.",
                 related_name="products",
                 to="locations.location",
-                verbose_name="Product locations",
+                verbose_name="Locations",
             ),
         ),
         migrations.AddField(
