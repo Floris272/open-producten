@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.core.models import BaseModel
 
-class TagType(models.Model):
+
+class TagType(BaseModel):
     name = models.CharField(
         verbose_name=_("Name"),
         max_length=100,
@@ -18,15 +20,9 @@ class TagType(models.Model):
         return self.name
 
 
-class Tag(models.Model):
+class Tag(BaseModel):
     name = models.CharField(
         verbose_name=_("Name"), max_length=100, help_text=_("Name of the tag")
-    )
-    slug = models.SlugField(
-        verbose_name=_("Slug"),
-        max_length=100,
-        unique=True,
-        help_text=_("Slug of the tag"),
     )
     icon = models.ImageField(
         verbose_name=_("Icon"),

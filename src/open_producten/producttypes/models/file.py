@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.core.models import BaseModel
+
 from .producttype import ProductType
 
 
-class File(models.Model):
+class File(BaseModel):
     product_type = models.ForeignKey(
         ProductType,
         verbose_name=_("Product type"),

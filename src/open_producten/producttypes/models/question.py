@@ -2,11 +2,13 @@ from django.core.validators import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.core.models import BaseModel
+
 from .category import Category
 from .producttype import ProductType
 
 
-class Question(models.Model):
+class Question(BaseModel):
     category = models.ForeignKey(
         Category,
         verbose_name=_("Category"),

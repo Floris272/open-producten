@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from treebeard.exceptions import InvalidMoveToDescendant
 from treebeard.mp_tree import MP_MoveHandler, MP_Node
 
-from open_producten.core.models import BaseModel
+from open_producten.core.models import BasePublishableModel
 
 
 class PublishedMoveHandler(MP_MoveHandler):
@@ -17,15 +17,9 @@ class PublishedMoveHandler(MP_MoveHandler):
         return super().process()
 
 
-class Category(MP_Node, BaseModel):
+class Category(MP_Node, BasePublishableModel):
     name = models.CharField(
         verbose_name=_("Name"), max_length=100, help_text=_("Name of the category")
-    )
-    slug = models.SlugField(
-        verbose_name=_("Slug"),
-        max_length=100,
-        unique=True,
-        help_text=_("Slug of the category"),
     )
 
     description = models.TextField(

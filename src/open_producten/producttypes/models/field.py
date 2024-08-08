@@ -3,10 +3,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.core.models import BaseModel
+
 from .producttype import ProductType
 
 
-class Field(models.Model):
+class Field(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
 

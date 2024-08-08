@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from open_producten.core.models import BaseModel
+from open_producten.core.models import BasePublishableModel
 
 from .category import Category
 from .condition import Condition
@@ -25,16 +25,9 @@ class CategoryProductType(models.Model):
     get_product_name.short_description = _("Name")
 
 
-class ProductType(BaseModel):
+class ProductType(BasePublishableModel):
     name = models.CharField(
         verbose_name=_("Name"), max_length=100, help_text=_("Name of the product")
-    )
-
-    slug = models.SlugField(
-        verbose_name=_("Slug"),
-        max_length=100,
-        unique=True,
-        help_text=_("Slug of the product"),
     )
 
     summary = models.TextField(

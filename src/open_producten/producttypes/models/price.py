@@ -5,10 +5,12 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.core.models import BaseModel
+
 from .producttype import ProductType
 
 
-class Price(models.Model):
+class Price(BaseModel):
     product_type = models.ForeignKey(
         ProductType,
         on_delete=models.CASCADE,
@@ -30,7 +32,7 @@ class Price(models.Model):
         return self.product_type.name, self.start_date
 
 
-class PriceOption(models.Model):
+class PriceOption(BaseModel):
     price = models.ForeignKey(
         Price,
         on_delete=models.CASCADE,
