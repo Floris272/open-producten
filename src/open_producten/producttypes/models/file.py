@@ -17,8 +17,8 @@ class File(BaseModel):
     file = models.FileField(verbose_name=_("File"))
 
     class Meta:
-        verbose_name = _("Product file")
-        verbose_name_plural = _("Product files")
+        verbose_name = _("Product type file")
+        verbose_name_plural = _("Product type files")
 
     def __str__(self):
         return self.file.name

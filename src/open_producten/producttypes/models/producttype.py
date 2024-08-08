@@ -16,25 +16,27 @@ class CategoryProductType(models.Model):
     """
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product = models.ForeignKey("ProductType", on_delete=models.CASCADE)
+    product_type = models.ForeignKey("ProductType", on_delete=models.CASCADE)
     order_with_respect_to = "category"
 
     def get_product_name(self):
-        return self.product.name
+        return self.product_type.name
 
     get_product_name.short_description = _("Name")
 
 
 class ProductType(BasePublishableModel):
     name = models.CharField(
-        verbose_name=_("Name"), max_length=100, help_text=_("Name of the product")
+        verbose_name=_("Name"), max_length=100, help_text=_("Name of the product type")
     )
 
     summary = models.TextField(
         verbose_name=_("Summary"),
         default="",
         max_length=300,
-        help_text=_("Short description of the product, limited to 300 characters."),
+        help_text=_(
+            "Short description of the product type, limited to 300 characters."
+        ),
     )
 
     icon = models.ImageField(
@@ -55,12 +57,12 @@ class ProductType(BasePublishableModel):
         verbose_name=_("Form link"),
         blank=True,
         default="",
-        help_text=_("Action link to request the product."),
+        help_text=_("Action link to request the product type."),
     )
 
     content = models.TextField(
         verbose_name=_("Content"),
-        help_text=_("Product content with build-in WYSIWYG editor."),
+        help_text=_("Product type content with build-in WYSIWYG editor."),
     )
 
     related_product_types = models.ManyToManyField(
@@ -99,7 +101,7 @@ class ProductType(BasePublishableModel):
         verbose_name=_("Tags"),
         blank=True,
         related_name="product_types",
-        help_text=_("Tags which the product is linked to"),
+        help_text=_("Tags which the product type is linked to"),
     )
 
     categories = models.ManyToManyField(
@@ -107,7 +109,7 @@ class ProductType(BasePublishableModel):
         verbose_name=_("Categories"),
         blank=True,
         related_name="product_types",
-        help_text=_("Categories which the product is linked to"),
+        help_text=_("Categories which the product type is linked to"),
         through=CategoryProductType,
     )
 
