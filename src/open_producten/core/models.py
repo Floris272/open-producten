@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
     class Meta:
         abstract = True
