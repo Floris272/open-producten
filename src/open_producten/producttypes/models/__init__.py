@@ -7,10 +7,10 @@ from .price import Price, PriceOption
 from .producttype import CategoryProductType, ProductType
 from .question import Question
 from .tag import Tag, TagType
-from .upn import Upn
+from .upn import UniformProductName
 
 __all__ = [
-    "Upn",
+    "UniformProductName",
     "Question",
     "Category",
     "Condition",

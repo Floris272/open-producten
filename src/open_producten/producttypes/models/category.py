@@ -4,14 +4,14 @@ from django.utils.translation import gettext_lazy as _
 from treebeard.exceptions import InvalidMoveToDescendant
 from treebeard.mp_tree import MP_MoveHandler, MP_Node
 
-from open_producten.core.models import BasePublishableModel
+from open_producten.utils.models import BasePublishableModel
 
 
 class PublishedMoveHandler(MP_MoveHandler):
     def process(self):
         if self.node.published and not self.target.published:
             raise InvalidMoveToDescendant(
-                _("Published nodes cannot be moved to unpublished ones.")
+                _("Published nodes cannot be nested under unpublished ones.")
             )
         return super().process()
 

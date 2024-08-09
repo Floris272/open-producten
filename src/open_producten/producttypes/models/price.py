@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from open_producten.core.models import BaseModel
+from open_producten.utils.models import BaseModel
 
 from .producttype import ProductType
 
@@ -17,11 +17,11 @@ class Price(BaseModel):
         related_name="prices",
         help_text=_("The product type that this price belongs to"),
     )
-    start_date = models.DateField(
+    valid_from = models.DateField(
         verbose_name=_("Start date"),
         validators=[MinValueValidator(datetime.date.today)],
         unique=True,
-        help_text=_("The start date for this price"),
+        help_text=_("The date at which this price is valid"),
     )
 
     class Meta:
@@ -29,7 +29,7 @@ class Price(BaseModel):
         verbose_name_plural = _("Prices")
 
     def __str__(self):
-        return self.product_type.name, self.start_date
+        return f"{self.product_type.name} {self.valid_from}"
 
 
 class PriceOption(BaseModel):
@@ -39,7 +39,7 @@ class PriceOption(BaseModel):
         related_name="options",
         help_text=_("The price this option belongs to"),
     )
-    cost = models.DecimalField(
+    amount = models.DecimalField(
         verbose_name=_("Price"),
         decimal_places=2,
         max_digits=8,
@@ -58,4 +58,4 @@ class PriceOption(BaseModel):
         verbose_name_plural = _("Price options")
 
     def __str__(self):
-        return self.description
+        return f"{self.description} {self.amount}"

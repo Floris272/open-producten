@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from open_producten.core.models import BaseModel
+from open_producten.utils.models import BaseModel
 
 from .producttype import ProductType
 
@@ -21,4 +21,4 @@ class File(BaseModel):
         verbose_name_plural = _("Product type files")
 
     def __str__(self):
-        return self.file.name
+        return f"{self.product_type}: {self.file.name}"

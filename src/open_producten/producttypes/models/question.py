@@ -2,7 +2,7 @@ from django.core.validators import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from open_producten.core.models import BaseModel
+from open_producten.utils.models import BaseModel
 
 from .category import Category
 from .producttype import ProductType
@@ -26,11 +26,10 @@ class Question(BaseModel):
     question = models.CharField(verbose_name=_("Question"), max_length=250)
     answer = models.TextField(verbose_name=_("Answer"))
 
-    order_with_respect_to = "category"
-
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
+        order_with_respect_to = "category"
 
     def clean(self):
         if self.category and self.product_type:

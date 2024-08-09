@@ -15,21 +15,17 @@ class BasePublishableModel(BaseModel):
     published = models.BooleanField(
         verbose_name=_("Published"),
         default=False,
-        help_text=_("Whether the object is accessible with the api."),
+        help_text=_("Whether the object is accessible through the API."),
     )
     created_on = models.DateTimeField(
         verbose_name=_("Created on"),
         auto_now_add=True,
-        help_text=_(
-            "The date the object was created. This field is automatically set."
-        ),
+        help_text=_("The datetime at which the object was created."),
     )
     updated_on = models.DateTimeField(
         verbose_name=_("Updated on"),
         auto_now=True,
-        help_text=_(
-            "The date when the object was last changed. This field is automatically set."
-        ),
+        help_text=_("The datetime at which the object was last changed."),
     )
 
     class Meta:

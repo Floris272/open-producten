@@ -2,27 +2,24 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from open_producten.core.models import BasePublishableModel
+from open_producten.utils.models import BasePublishableModel
 
 from .category import Category
 from .condition import Condition
 from .tag import Tag
-from .upn import Upn
+from .upn import UniformProductName
 
 
 class CategoryProductType(models.Model):
     """
-    explicit many2many through model
+    Through-model for Category-ProductType m2m-relations.
     """
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_type = models.ForeignKey("ProductType", on_delete=models.CASCADE)
-    order_with_respect_to = "category"
 
-    def get_product_name(self):
-        return self.product_type.name
-
-    get_product_name.short_description = _("Name")
+    class Meta:
+        order_with_respect_to = "category"
 
 
 class ProductType(BasePublishableModel):
@@ -81,7 +78,7 @@ class ProductType(BasePublishableModel):
     )
 
     uniform_product_name = models.ForeignKey(
-        Upn,
+        UniformProductName,
         verbose_name=_("Uniform Product name"),
         on_delete=models.CASCADE,
         help_text=_("Uniform product name defined by Dutch gov"),
