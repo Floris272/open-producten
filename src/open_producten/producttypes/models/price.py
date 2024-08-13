@@ -45,7 +45,7 @@ class PriceOption(BaseModel):
         max_digits=8,
         default=0,
         validators=[MinValueValidator(Decimal("0.01"))],
-        help_text=_("The cost of the price option"),
+        help_text=_("The amount of the price option"),
     )
     description = models.CharField(
         verbose_name=_("Description"),
