@@ -3,6 +3,9 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from localflavor.generic.validators import IBANValidator
+from localflavor.nl.validators import NLLicensePlateFieldValidator
+
 from open_producten.producttypes.models import Field, FieldTypes
 from open_producten.utils.models import BaseModel
 from open_producten.utils.validators import validate_postal_code
@@ -78,13 +81,8 @@ class Data(BaseModel):
         FieldTypes.EMAIL: lambda data: validate_regex(
             data, r"^.+@.+\..+$", FieldTypes.EMAIL
         ),
-        FieldTypes.FILE: lambda data: None,  # TODO
-        FieldTypes.IBAN: lambda data: None,  # TODO package?
-        FieldTypes.LICENSE_PLATE: lambda data: validate_regex(
-            data,
-            r"^[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{1,3}$",
-            FieldTypes.LICENSE_PLATE,
-        ),
+        FieldTypes.IBAN: lambda data: IBANValidator()(data),
+        FieldTypes.LICENSE_PLATE: lambda data: NLLicensePlateFieldValidator()(data),
         FieldTypes.MAP: lambda data: validate_regex(
             data, r"^\d+\.?\d*,\d+\.?\d*$", FieldTypes.MAP
         ),

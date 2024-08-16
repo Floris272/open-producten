@@ -180,6 +180,7 @@ django==4.2.13
     #   django-filter
     #   django-formtools
     #   django-jsonform
+    #   django-localflavor
     #   django-log-outgoing-requests
     #   django-markup
     #   django-otp
@@ -246,6 +247,10 @@ django-jsonform==2.22.0
     #   -r requirements/ci.txt
     #   mozilla-django-oidc-db
     #   open-api-framework
+django-localflavor==4.0
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
 django-log-outgoing-requests==0.6.1
     # via
     #   -c requirements/ci.txt
@@ -662,6 +667,11 @@ python-dotenv==1.0.1
     #   -c requirements/ci.txt
     #   -r requirements/ci.txt
     #   open-api-framework
+python-stdnum==1.20
+    # via
+    #   -c requirements/ci.txt
+    #   -r requirements/ci.txt
+    #   django-localflavor
 pytz==2024.1
     # via
     #   -c requirements/ci.txt

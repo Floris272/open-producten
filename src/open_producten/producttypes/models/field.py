@@ -18,7 +18,6 @@ class FieldTypes(models.TextChoices):
     DATE = "date"  # DATE
     DATETIME = "datetime"  # DATETIME
     EMAIL = "email"  # STR
-    FILE = "file"  # STR
     IBAN = "iban"  # STR
     LICENSE_PLATE = "licenseplate"  # STR
     MAP = "map"  # STR (remove brackets)

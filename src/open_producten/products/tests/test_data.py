@@ -158,11 +158,16 @@ class TestData(TestCase):
 
         DataFactory.build(field=field, data="abcde@gmail.com").clean()
 
-    def test_clean_file(self):  # TODO
-        pass
+    def test_clean_iban(self):
+        field = FieldFactory.create(type=FieldTypes.IBAN)
 
-    def test_clean_iban(self):  # TODO
-        pass
+        with self.assertRaises(ValidationError):
+            DataFactory.build(field=field, data="0001234567").clean()
+
+        with self.assertRaises(ValidationError):
+            DataFactory.build(field=field, data="NL10INGB0001234567").clean()
+
+        DataFactory.build(field=field, data="NL20INGB0001234567").clean()
 
     def test_clean_license_plate(self):
         field = FieldFactory.create(type=FieldTypes.LICENSE_PLATE)
@@ -173,7 +178,7 @@ class TestData(TestCase):
         with self.assertRaises(ValidationError):
             DataFactory.build(field=field, data="abc123ad").clean()
 
-        DataFactory.build(field=field, data="123-aaa-123").clean()
+        DataFactory.build(field=field, data="123-AA-1").clean()
 
     def test_clean_map(self):
         field = FieldFactory.create(type=FieldTypes.MAP)
