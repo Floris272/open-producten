@@ -27,7 +27,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      pypi-dependencies:
+      pypi-dependencies-security:
         patterns:
           - "*"
         exclude-patterns:
