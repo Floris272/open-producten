@@ -15,6 +15,24 @@ updates:
       pypi-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "ci.txt"
         update-types:
           - "minor"
           - "patch"
+  - package-ecosystem: "pip"
+    directory: "/requirements"
+    versioning-strategy: "auto"
+    open-pull-requests-limit: 0
+    schedule:
+      interval: "weekly"
+    groups:
+      pypi-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "ci.txt"
+        update-types:
+          - "minor"
+          - "patch"
+        applies-to: "security-updates"
