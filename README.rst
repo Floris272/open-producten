@@ -1,5 +1,5 @@
 ==================
-open_producten
+open_producten TEST
 ==================
 
 :Version: 0.1.0
