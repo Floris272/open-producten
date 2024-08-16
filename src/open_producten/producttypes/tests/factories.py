@@ -31,24 +31,6 @@ class ProductTypeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProductType
 
-    @factory.post_generation
-    def categories(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            for category in extracted:
-                self.categories.add(category)
-
-    @factory.post_generation
-    def related_product_types(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            for related_product_type in extracted:
-                self.related_product_types.add(related_product_type)
-
 
 class CategoryFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"category {n}")
