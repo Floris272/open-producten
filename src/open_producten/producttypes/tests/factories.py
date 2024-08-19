@@ -56,8 +56,8 @@ class TagFactory(factory.django.DjangoModelFactory):
 class ConditionFactory(factory.django.DjangoModelFactory):
     name = factory.Faker("word")
     question = factory.Faker("word")
-    positive_text = factory.Faker("word")
-    negative_text = factory.Faker("word")
+    positive_text = factory.Faker("sentence")
+    negative_text = factory.Faker("sentence")
 
     class Meta:
         model = Condition

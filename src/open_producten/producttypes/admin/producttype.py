@@ -53,7 +53,6 @@ class ProductTypeAdmin(admin.ModelAdmin):
             "links",
         )
 
+    @admin.display(description="categories")
     def display_categories(self, obj):
         return ", ".join(p.name for p in obj.categories.all())
-
-    display_categories.short_description = "categories"

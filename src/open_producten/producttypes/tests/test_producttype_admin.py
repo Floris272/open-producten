@@ -15,7 +15,7 @@ class TestProductTypeAdinForm(TestCase):
             "summary": "summary",
         }
 
-    def test_at_least_one_category(self):
+    def test_at_least_one_category_is_required(self):
         form = ProductTypeAdminForm(data=self.data)
 
         self.assertEquals(

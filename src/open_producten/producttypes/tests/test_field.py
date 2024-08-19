@@ -7,10 +7,7 @@ from .factories import FieldFactory
 
 class TestField(TestCase):
 
-    def setUp(self):
-        pass
-
-    def test_choice_field_with_choices(self):
+    def test_choice_field_requires_choices(self):
         field = FieldFactory.build(type=Field.FieldTypes.RADIO)
 
         with self.assertRaises(ValidationError):
@@ -26,7 +23,7 @@ class TestField(TestCase):
         with self.assertRaises(ValidationError):
             field.clean()
 
-    def test_choices_without_choice_field(self):
+    def test_normal_field_cannot_have_choices(self):
         field = FieldFactory.build(type=Field.FieldTypes.TEXTFIELD, choices=["a", "b"])
 
         with self.assertRaises(ValidationError):

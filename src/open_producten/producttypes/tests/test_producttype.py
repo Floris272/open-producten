@@ -13,7 +13,7 @@ class TestProductType(TestCase):
         self.past_price = PriceFactory.create(
             product_type=self.product_type, valid_from=date(2020, 1, 1)
         )
-        self.present_price = PriceFactory.create(
+        self.current_price = PriceFactory.create(
             product_type=self.product_type, valid_from=date(2024, 1, 1)
         )
         self.future_price = PriceFactory.create(
@@ -21,9 +21,9 @@ class TestProductType(TestCase):
         )
 
     @freeze_time("2024-02-02")
-    def test_current_price(self):
+    def test_current_price_when_set(self):
         price = self.product_type.current_price
-        self.assertEqual(price, self.present_price)
+        self.assertEqual(price, self.current_price)
 
     def test_current_price_without_prices(self):
         self.product_type = ProductTypeFactory.create()

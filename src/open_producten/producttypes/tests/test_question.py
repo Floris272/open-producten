@@ -9,7 +9,6 @@ class TestQuestion(TestCase):
     def setUp(self):
         self.productType = ProductTypeFactory.create()
         self.category = CategoryFactory.create()
-        pass
 
     def test_error_when_linked_to_type_and_category(self):
         question = QuestionFactory.build(

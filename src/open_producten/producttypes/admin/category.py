@@ -52,9 +52,7 @@ class CategoryAdminFormSet(BaseModelFormSet):
         }
 
         for category, published in data.items():
-            children = category.get_children()
-
-            if children:
+            if children := category.get_children():
                 if not published and any([data[child] for child in children]):
                     raise forms.ValidationError(
                         _("Parent nodes cannot be unpublished with published children.")

@@ -29,7 +29,6 @@ class Question(BaseModel):
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
-        order_with_respect_to = "category"
 
     def clean(self):
         if self.category and self.product_type:

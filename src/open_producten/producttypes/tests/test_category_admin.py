@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 from django.test import TestCase
 
-from open_producten.utils.test_helpers import build_formset_data
+from open_producten.utils.tests.test_helpers import build_formset_data
 
 from ..admin.category import CategoryAdmin, CategoryAdminForm, CategoryAdminFormSet
 from ..models import Category
@@ -34,12 +34,8 @@ class TestCategoryAdminForm(TestCase):
         form = create_form(data)
 
         self.assertEquals(
-            form.errors,
-            {
-                "__all__": [
-                    "Parent nodes have to be published in order to publish a child."
-                ]
-            },
+            form.non_field_errors(),
+            ["Parent nodes have to be published in order to publish a child."],
         )
 
         parent.published = True
@@ -56,12 +52,8 @@ class TestCategoryAdminForm(TestCase):
         form = create_form(data, parent)
 
         self.assertEquals(
-            form.errors,
-            {
-                "__all__": [
-                    "Parent nodes cannot be unpublished if they have published children."
-                ]
-            },
+            form.non_field_errors(),
+            ["Parent nodes cannot be unpublished if they have published children."],
         )
 
 
