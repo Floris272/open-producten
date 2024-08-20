@@ -6,9 +6,10 @@ from open_producten.products.models import Product
 from open_producten.producttypes.models import FieldTypes
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
 from open_producten.utils.tests.test_helpers import build_formset_data
-from .factories import ProductFactory
+
 from ..admin.data import DataInlineFormSet
 from ..models import Data
+from .factories import ProductFactory
 
 
 class TestDataInline(TestCase):
