@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from open_producten.producttypes.models import Category, ProductType
-
 from .children import QuestionSerializer, UpnSerializer
 
 
@@ -48,22 +47,24 @@ class CategorySerializer(serializers.ModelSerializer):
         return category
 
     def update(self, instance, validated_data):
-        product_types = validated_data.pop("product_type_ids")
-        parent_category = validated_data.pop("parent_category")
+        product_types = validated_data.pop("product_type_ids", None)
+        parent_category = validated_data.pop("parent_category", "ignore")  # None is a valid value
 
-        instance_parent = instance.get_parent()
+        if parent_category != "ignore":
+            instance_parent = instance.get_parent()
+            if parent_category is None and instance_parent is not None:
+                last_root = Category.get_last_root_node()
+                instance.move(last_root, "last-sibling")
 
-        if parent_category is None and instance_parent is not None:
-            last_root = Category.get_last_root_node()
-            instance.move(last_root, "last-sibling")
+            elif parent_category != instance_parent:
+                instance.move(parent_category, "last-child")
 
-        elif parent_category != instance_parent:
-            instance.move(parent_category, "last-child")
-
-        instance.refresh_from_db()
+            instance.refresh_from_db()
 
         instance = super().update(instance, validated_data)
-        instance.product_types.set(product_types)
+
+        if product_types is not None:
+            instance.product_types.set(product_types)
         instance.save()
 
         return instance

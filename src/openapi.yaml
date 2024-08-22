@@ -98,7 +98,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Question'
           description: ''
-  /api/v1/categories/{category_id}/questions/{id}/:
+  /api/v1/categories/{category_id}/questions/{question_id}/:
     get:
       operationId: categories_questions_retrieve
       parameters:
@@ -109,7 +109,7 @@ paths:
             format: uuid
           required: true
         - in: path
-          name: id
+          name: question_id
           schema:
             type: string
             format: uuid
@@ -138,7 +138,7 @@ paths:
             format: uuid
           required: true
         - in: path
-          name: id
+          name: question_id
           schema:
             type: string
             format: uuid
@@ -163,6 +163,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/Question'
           description: ''
+    patch:
+      operationId: categories_questions_partial_update
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
     delete:
       operationId: categories_questions_destroy
       parameters:
@@ -173,7 +207,7 @@ paths:
             format: uuid
           required: true
         - in: path
-          name: id
+          name: question_id
           schema:
             type: string
             format: uuid
@@ -230,6 +264,34 @@ paths:
             schema:
               $ref: '#/components/schemas/Category'
         required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: categories_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Category.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
       security:
         - cookieAuth: [ ]
         - basicAuth: [ ]
@@ -352,6 +414,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProductType'
           description: ''
+    patch:
+      operationId: producttypes_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductType'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductType'
+          description: ''
     delete:
       operationId: producttypes_destroy
       parameters:
@@ -426,12 +516,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Field'
           description: ''
-  /api/v1/producttypes/{product_type_id}/fields/{id}/:
+  /api/v1/producttypes/{product_type_id}/fields/{field_id}/:
     get:
       operationId: producttypes_fields_retrieve
       parameters:
         - in: path
-          name: id
+          name: field_id
           schema:
             type: string
             format: uuid
@@ -461,7 +551,7 @@ paths:
       operationId: producttypes_fields_update
       parameters:
         - in: path
-          name: id
+          name: field_id
           schema:
             type: string
             format: uuid
@@ -493,11 +583,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/Field'
           description: ''
+    patch:
+      operationId: producttypes_fields_partial_update
+      parameters:
+        - in: path
+          name: field_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Field.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedField'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Field'
+          description: ''
     delete:
       operationId: producttypes_fields_destroy
       parameters:
         - in: path
-          name: id
+          name: field_id
           schema:
             type: string
             format: uuid
@@ -574,12 +699,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Link'
           description: ''
-  /api/v1/producttypes/{product_type_id}/links/{id}/:
+  /api/v1/producttypes/{product_type_id}/links/{link_id}/:
     get:
       operationId: producttypes_links_retrieve
       parameters:
         - in: path
-          name: id
+          name: link_id
           schema:
             type: string
             format: uuid
@@ -609,7 +734,7 @@ paths:
       operationId: producttypes_links_update
       parameters:
         - in: path
-          name: id
+          name: link_id
           schema:
             type: string
             format: uuid
@@ -641,11 +766,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/Link'
           description: ''
+    patch:
+      operationId: producttypes_links_partial_update
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type link.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLink'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+          description: ''
     delete:
       operationId: producttypes_links_destroy
       parameters:
         - in: path
-          name: id
+          name: link_id
           schema:
             type: string
             format: uuid
@@ -722,12 +882,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Price'
           description: ''
-  /api/v1/producttypes/{product_type_id}/prices/{id}/:
+  /api/v1/producttypes/{product_type_id}/prices/{price_id}/:
     get:
       operationId: producttypes_prices_retrieve
       parameters:
         - in: path
-          name: id
+          name: price_id
           schema:
             type: string
             format: uuid
@@ -757,7 +917,7 @@ paths:
       operationId: producttypes_prices_update
       parameters:
         - in: path
-          name: id
+          name: price_id
           schema:
             type: string
             format: uuid
@@ -789,11 +949,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/Price'
           description: ''
+    patch:
+      operationId: producttypes_prices_partial_update
+      parameters:
+        - in: path
+          name: price_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Price.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPrice'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+          description: ''
     delete:
       operationId: producttypes_prices_destroy
       parameters:
         - in: path
-          name: id
+          name: price_id
           schema:
             type: string
             format: uuid
@@ -868,22 +1063,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Question'
           description: ''
-  /api/v1/producttypes/{product_type_id}/questions/{id}/:
+  /api/v1/producttypes/{product_type_id}/questions/{question_id}/:
     get:
       operationId: producttypes_questions_retrieve
       parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-            format: uuid
-          description: A UUID string identifying this Question.
-          required: true
         - in: path
           name: product_type_id
           schema:
             type: string
             format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
           required: true
       tags:
         - producttypes
@@ -902,17 +1097,17 @@ paths:
       operationId: producttypes_questions_update
       parameters:
         - in: path
-          name: id
-          schema:
-            type: string
-            format: uuid
-          description: A UUID string identifying this Question.
-          required: true
-        - in: path
           name: product_type_id
           schema:
             type: string
             format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
           required: true
       tags:
         - producttypes
@@ -933,21 +1128,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/Question'
           description: ''
-    delete:
-      operationId: producttypes_questions_destroy
+    patch:
+      operationId: producttypes_questions_partial_update
       parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-            format: uuid
-          description: A UUID string identifying this Question.
-          required: true
         - in: path
           name: product_type_id
           schema:
             type: string
             format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    delete:
+      operationId: producttypes_questions_destroy
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
           required: true
       tags:
         - producttypes
@@ -1004,7 +1233,6 @@ components:
           description: The datetime at which the object was last changed.
         name:
           type: string
-          title: Naam
           description: Name of the category
           maxLength: 100
         description:
@@ -1019,7 +1247,6 @@ components:
           type: string
           format: uri
           nullable: true
-          title: Afbeelding
           description: Image of the category
       required:
         - created_on
@@ -1032,9 +1259,12 @@ components:
     Condition:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
-          title: Naam
           description: Short name of the condition
           maxLength: 100
         question:
@@ -1047,6 +1277,7 @@ components:
           type: string
           description: Description how not to meet the condition
       required:
+        - id
         - name
         - negative_text
         - positive_text
@@ -1054,9 +1285,12 @@ components:
     Field:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
-          title: Naam
           description: The name of the field
           maxLength: 255
         description:
@@ -1101,13 +1335,17 @@ components:
           description: The Choices that can be selected in the form
       required:
         - description
+        - id
         - name
     Link:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
-          title: Naam
           description: Name for the link
           maxLength: 100
         url:
@@ -1116,11 +1354,288 @@ components:
           description: Url of the link
           maxLength: 200
       required:
+        - id
         - name
         - url
+    PatchedCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        parent_category:
+          type: string
+          format: uuid
+          writeOnly: true
+          nullable: true
+        product_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleProductType'
+          readOnly: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        product_type_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the category
+          maxLength: 100
+        description:
+          type: string
+          description: Description of the category
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the category
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Image of the category
+    PatchedField:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: The name of the field
+          maxLength: 255
+        description:
+          type: string
+          description: Short description of the field
+          maxLength: 300
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TypeEnum'
+          description: |-
+            The formio type of the field
+
+            * `bsn` - Bsn
+            * `checkbox` - Checkbox
+            * `Cosign` - Cosign
+            * `currency` - Currency
+            * `date` - Date
+            * `datetime` - Datetime
+            * `email` - Email
+            * `file` - File
+            * `iban` - Iban
+            * `licenseplate` - License Plate
+            * `map` - Map
+            * `number` - Number
+            * `password` - Password
+            * `phoneNumber` - Phone Number
+            * `postcode` - Postcode
+            * `radio` - Radio
+            * `select` - Select
+            * `selectBoxes` - Select Boxes
+            * `signature` - Signature
+            * `textfield` - Textfield
+            * `time` - Time
+        is_required:
+          type: boolean
+        choices:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          nullable: true
+          description: The Choices that can be selected in the form
+    PatchedLink:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name for the link
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          description: Url of the link
+          maxLength: 200
+    PatchedPrice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceOption'
+          default: [ ]
+        valid_from:
+          type: string
+          format: date
+          title: Start date
+          description: The date at which this price is valid
+    PatchedProductType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          readOnly: true
+        tag_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        related_product_types:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: [ ]
+        uniform_product_name:
+          type: string
+          format: uuid
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          readOnly: true
+        condition_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleCategory'
+          readOnly: true
+        category_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+          readOnly: true
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          readOnly: true
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the product type
+          maxLength: 100
+        summary:
+          type: string
+          description: Short description of the product type, limited to 300 characters.
+          maxLength: 300
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the product type
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Main image of the product type
+        form_link:
+          type: string
+          format: uri
+          description: Action link to request the product type.
+          maxLength: 200
+        content:
+          type: string
+          description: Product type content with build-in WYSIWYG editor.
+        keywords:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          description: List of keywords for search
+    PatchedQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        question:
+          type: string
+          maxLength: 250
+        answer:
+          type: string
     Price:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         options:
           type: array
           items:
@@ -1132,6 +1647,7 @@ components:
           title: Start date
           description: The date at which this price is valid
       required:
+        - id
         - valid_from
     PriceOption:
       type: object
@@ -1144,7 +1660,7 @@ components:
           format: decimal
           pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
           title: Price
-          description: The cost of the price option
+          description: The amount of the price option
         description:
           type: string
           description: Short description of the option
@@ -1238,12 +1754,10 @@ components:
           description: The datetime at which the object was last changed.
         name:
           type: string
-          title: Naam
           description: Name of the product type
           maxLength: 100
         summary:
           type: string
-          title: Samenvatting
           description: Short description of the product type, limited to 300 characters.
           maxLength: 300
         icon:
@@ -1255,7 +1769,6 @@ components:
           type: string
           format: uri
           nullable: true
-          title: Afbeelding
           description: Main image of the product type
         form_link:
           type: string
@@ -1288,6 +1801,10 @@ components:
     Question:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         question:
           type: string
           maxLength: 250
@@ -1295,6 +1812,7 @@ components:
           type: string
       required:
         - answer
+        - id
         - question
     SimpleCategory:
       type: object
@@ -1314,7 +1832,6 @@ components:
           description: The datetime at which the object was last changed.
         name:
           type: string
-          title: Naam
           description: Name of the category
           maxLength: 100
         description:
@@ -1329,7 +1846,6 @@ components:
           type: string
           format: uri
           nullable: true
-          title: Afbeelding
           description: Image of the category
       required:
         - created_on
@@ -1355,12 +1871,10 @@ components:
           description: The datetime at which the object was last changed.
         name:
           type: string
-          title: Naam
           description: Name of the product type
           maxLength: 100
         summary:
           type: string
-          title: Samenvatting
           description: Short description of the product type, limited to 300 characters.
           maxLength: 300
         icon:
@@ -1372,7 +1886,6 @@ components:
           type: string
           format: uri
           nullable: true
-          title: Afbeelding
           description: Main image of the product type
         form_link:
           type: string
@@ -1397,11 +1910,14 @@ components:
     Tag:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         type:
           $ref: '#/components/schemas/TagType'
         name:
           type: string
-          title: Naam
           description: Name of the tag
           maxLength: 100
         icon:
@@ -1410,6 +1926,7 @@ components:
           nullable: true
           description: Icon of the tag
       required:
+        - id
         - name
         - type
     TagType:
@@ -1417,7 +1934,6 @@ components:
       properties:
         name:
           type: string
-          title: Naam
           description: Name of the tag type
           maxLength: 100
       required:
@@ -1471,9 +1987,12 @@ components:
     Upn:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
-          title: Naam
           description: Uniform product name
           maxLength: 100
         url:
@@ -1482,6 +2001,7 @@ components:
           description: Url to the upn definition.
           maxLength: 200
       required:
+        - id
         - name
   securitySchemes:
     basicAuth:
