@@ -30,7 +30,7 @@ class PriceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Price
-        exclude = ("id", "product_type")
+        exclude = ("product_type",)
 
     @transaction.atomic()
     def create(self, validated_data):
@@ -46,28 +46,29 @@ class PriceSerializer(serializers.ModelSerializer):
 
     @transaction.atomic()
     def update(self, instance, validated_data):
-        options = validated_data.pop("options")
+        options = validated_data.pop("options", None)
         price = super().update(instance, validated_data)
         current_option_ids = list(price.options.values_list("id", flat=True))
 
-        for option in options:
-            option_id = option.pop("id", None)
-            if option_id is None:
-                PriceOption.objects.create(price=price, **option)
+        if options is not None:
+            for option in options:
+                option_id = option.pop("id", None)
+                if option_id is None:
+                    PriceOption.objects.create(price=price, **option)
 
-            elif option_id in current_option_ids:
-                existing_option = PriceOption.objects.get(id=option_id)
-                existing_option.amount = option["amount"]
-                existing_option.description = option["description"]
-                existing_option.save()
-                current_option_ids.remove(option_id)
+                elif option_id in current_option_ids:
+                    existing_option = PriceOption.objects.get(id=option_id)
+                    existing_option.amount = option["amount"]
+                    existing_option.description = option["description"]
+                    existing_option.save()
+                    current_option_ids.remove(option_id)
 
-            else:
-                raise ValidationError(
-                    f"Price option id {option_id} is not part of to price object."
-                )
+                else:
+                    raise ValidationError(
+                        f"Price option id {option_id} is not part of to price object."
+                    )
 
-        PriceOption.objects.filter(id__in=current_option_ids).delete()
+            PriceOption.objects.filter(id__in=current_option_ids).delete()
 
         return price
 
@@ -75,7 +76,7 @@ class PriceSerializer(serializers.ModelSerializer):
 class FieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = Field
-        exclude = ("id", "product_type")
+        exclude = ("product_type",)
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -95,28 +96,28 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class UpnSerializer(serializers.ModelSerializer):
     class Meta:
         model = UniformProductName
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        exclude = ("id", "category", "product_type")
+        exclude = ("category", "product_type")
 
 
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
-        exclude = ("id", "product_type")
+        exclude = ("product_type",)

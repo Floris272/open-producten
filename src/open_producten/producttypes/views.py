@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework.viewsets import ModelViewSet
 
 from open_producten.producttypes.models import (
@@ -19,62 +20,69 @@ from open_producten.producttypes.serializers.children import (
 from open_producten.producttypes.serializers.producttype import ProductTypeSerializer
 
 
-class BaseModelViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "put", "delete"]
-
-
-class ProductTypeViewSet(BaseModelViewSet):
+class ProductTypeViewSet(ModelViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
-    lookup_field = "id"
+    lookup_url_kwarg = "id"
 
 
-class ProductTypeChildViewSet(BaseModelViewSet):
+class ProductTypeChildViewSet(ModelViewSet):
+
+    def get_product_type(self):
+        return get_object_or_404(ProductType, id=self.kwargs["product_type_id"])
 
     def get_queryset(self):
-        return self.queryset.filter(product_type_id=self.kwargs["product_type_id"])
+        return self.queryset.filter(product_type=self.get_product_type())
 
     def perform_create(self, serializer):
-        serializer.save(
-            product_type=get_object_or_404(ProductType, id=self.kwargs["product_type_id"])
-        )
+        serializer.save(product_type=self.get_product_type())
+
+    # TODO perform_update? delete?
 
 
 class ProductTypeLinkViewSet(ProductTypeChildViewSet):
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
+    lookup_url_kwarg = "link_id"
 
 
 class ProductTypePriceViewSet(ProductTypeChildViewSet):
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
+    lookup_url_kwarg = "price_id"
 
 
 class ProductTypeFieldViewSet(ProductTypeChildViewSet):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
+    lookup_url_kwarg = "field_id"
 
 
 class ProductTypeQuestionViewSet(ProductTypeChildViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    lookup_url_kwarg = "question_id"
 
 
-class CategoryViewSet(BaseModelViewSet):
+class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = "id"
+    lookup_url_kwarg = "id"
 
 
-class CategoryChildViewSet(BaseModelViewSet):
+class CategoryChildViewSet(ModelViewSet):
+
+    def get_category(self):
+        return get_object_or_404(Category, id=self.kwargs["category_id"])
 
     def get_queryset(self):
-        return self.queryset.filter(category_id=self.kwargs["category_id"])
+        return self.queryset.filter(category=self.get_category())
 
     def perform_create(self, serializer):
-        serializer.save(category=get_object_or_404(Category, id=self.kwargs["category_id"]))
+        serializer.save(category=self.get_category())
 
 
 class CategoryQuestionViewSet(CategoryChildViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    lookup_url_kwarg = "question_id"

@@ -16,7 +16,7 @@ from maykin_2fa import monkeypatch_admin
 from maykin_2fa.urls import urlpatterns, webauthn_urlpatterns
 
 from open_producten.accounts.views.password_reset import PasswordResetView
-from open_producten.producttypes.router import ProductTypesRouter
+from open_producten.producttypes.router import product_type_urlpatterns
 
 # Configure admin
 
@@ -79,7 +79,7 @@ urlpatterns = [
                                 SpectacularRedocView.as_view(url_name="schema"),
                                 name="redoc",
                             ),
-                            path("", include(ProductTypesRouter.urls)),
+                            path("", include(product_type_urlpatterns)),
                         ]
                     ),
                 )

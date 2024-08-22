@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from open_producten.producttypes.models import Category, ProductType
+
 from .children import QuestionSerializer, UpnSerializer
 
 

@@ -77,18 +77,23 @@ class ProductTypeSerializer(serializers.ModelSerializer):
 
         return product_type
 
+    @transaction.atomic()
     def update(self, instance, validated_data):
-        related_product_types = validated_data.pop("related_product_types")
-        categories = validated_data.pop("category_ids")
-        conditions = validated_data.pop("condition_ids")
-        tags = validated_data.pop("tag_ids")
+        related_product_types = validated_data.pop("related_product_types", None)
+        categories = validated_data.pop("category_ids", None)
+        conditions = validated_data.pop("condition_ids", None)
+        tags = validated_data.pop("tag_ids", None)
 
         instance = super().update(instance, validated_data)
 
-        instance.related_product_types.set(related_product_types)
-        instance.categories.set(categories)
-        instance.tags.set(tags)
-        instance.conditions.set(conditions)
+        if related_product_types is not None:
+            instance.related_product_types.set(related_product_types)
+        if categories is not None:
+            instance.categories.set(categories)
+        if tags is not None:
+            instance.tags.set(tags)
+        if conditions is not None:
+            instance.conditions.set(conditions)
 
         instance.save()
 
