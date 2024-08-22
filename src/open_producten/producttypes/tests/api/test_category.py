@@ -3,21 +3,24 @@ from django.forms import model_to_dict
 from open_producten.producttypes.models import Category, Link
 from open_producten.producttypes.tests.factories import (
     CategoryFactory,
-    ProductTypeFactory, QuestionFactory,
+    ProductTypeFactory,
+    QuestionFactory,
 )
 from open_producten.utils.tests.test_cases import BaseApiTestCase
 
 
 def category_to_dict(category):
-    category_dict = model_to_dict(category, exclude=("path", "depth", "numchild")) | {"id": str(category.id)}
-    category_dict["questions"] = [model_to_dict(question) for question in category.questions.all()]
-    category_dict["product_types"] = [model_to_dict(product_type) for product_type in category.product_types.all()]
-    category_dict["created_on"] = str(
-        category.created_on.astimezone().isoformat()
-    )
-    category_dict["updated_on"] = str(
-        category.updated_on.astimezone().isoformat()
-    )
+    category_dict = model_to_dict(category, exclude=("path", "depth", "numchild")) | {
+        "id": str(category.id)
+    }
+    category_dict["questions"] = [
+        model_to_dict(question) for question in category.questions.all()
+    ]
+    category_dict["product_types"] = [
+        model_to_dict(product_type) for product_type in category.product_types.all()
+    ]
+    category_dict["created_on"] = str(category.created_on.astimezone().isoformat())
+    category_dict["updated_on"] = str(category.updated_on.astimezone().isoformat())
     return category_dict
 
 

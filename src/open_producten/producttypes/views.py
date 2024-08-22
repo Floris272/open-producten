@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework.viewsets import ModelViewSet
 
 from open_producten.producttypes.models import (
@@ -36,8 +35,6 @@ class ProductTypeChildViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(product_type=self.get_product_type())
-
-    # TODO perform_update? delete?
 
 
 class ProductTypeLinkViewSet(ProductTypeChildViewSet):
