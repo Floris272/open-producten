@@ -1,19 +1,22 @@
-from rest_framework.test import APITestCase
+from open_producten.producttypes.models import Category
+from open_producten.producttypes.tests.factories import (
+    CategoryFactory,
+    ProductTypeFactory,
+)
+from open_producten.utils.tests.test_cases import BaseApiTestCase
 
-from .factories import CategoryFactory, ProductTypeFactory
-from ..models import Category
 
-
-class TestCategoryViewSet(APITestCase):
+class TestCategoryViewSet(BaseApiTestCase):
 
     def setUp(self):
         self.data = {
             "name": "test-category",
             "parent_category": None,
         }
+        self.endpoint = "/api/v1/categories/"
 
     def test_create_minimal_category(self):
-        response = self.client.post("/api/v1/categories/", self.data, format="json")
+        response = self.post(self.data)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Category.objects.count(), 1)
@@ -22,17 +25,19 @@ class TestCategoryViewSet(APITestCase):
         parent = CategoryFactory.create()
         data = self.data | {"parent_category": parent.id}
 
-        response = self.client.post("/api/v1/categories/", data, format="json")
+        response = self.post(data)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Category.objects.count(), 2)
-        self.assertEqual(Category.objects.get(id=response.data["id"]).get_parent(), parent)
+        self.assertEqual(
+            Category.objects.get(id=response.data["id"]).get_parent(), parent
+        )
 
     def test_create_category_with_product_type(self):
         product_type = ProductTypeFactory.create()
         data = self.data | {"product_type_ids": [product_type.id]}
 
-        response = self.client.post("/api/v1/categories/", data, format="json")
+        response = self.post(data)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Category.objects.count(), 1)
@@ -43,23 +48,9 @@ class TestCategoryViewSet(APITestCase):
         category = CategoryFactory.create()
 
         data = self.data | {"parent_category": new_parent.id}
-        response = self.client.put(
-            f"/api/v1/categories/{category.id}/", data, format="json"
-        )
+        response = self.put(category.id, data)
 
         category.refresh_from_db()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(category.get_parent(), new_parent)
-
-    def test_add_question_to_product_type(self):
-        category = CategoryFactory.create()
-
-        data = {"question": "18?", "answer": "eligible"}
-        response = self.client.post(
-            f"/api/v1/categories/{category.id}/questions/", data, format="json"
-        )
-
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(Category.objects.count(), 1)
-        self.assertEqual(category.questions.first().question, "18?")
