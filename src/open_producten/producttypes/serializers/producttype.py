@@ -22,7 +22,11 @@ class SimpleCategorySerializer(serializers.ModelSerializer):
 class ProductTypeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Tag.objects.all(), default=[], write_only=True
+        many=True,
+        queryset=Tag.objects.all(),
+        default=[],
+        write_only=True,
+        source="tags",
     )
 
     related_product_types = serializers.PrimaryKeyRelatedField(
@@ -35,7 +39,11 @@ class ProductTypeSerializer(serializers.ModelSerializer):
 
     conditions = ConditionSerializer(many=True, read_only=True)
     condition_ids = serializers.PrimaryKeyRelatedField(
-        many=True, write_only=True, queryset=Condition.objects.all(), default=[]
+        many=True,
+        write_only=True,
+        queryset=Condition.objects.all(),
+        default=[],
+        source="conditions",
     )
 
     categories = SimpleCategorySerializer(many=True, read_only=True)
@@ -44,6 +52,7 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         write_only=True,
         queryset=Category.objects.all(),
         default=[],
+        source="categories",
     )
 
     questions = QuestionSerializer(many=True, read_only=True)
@@ -60,9 +69,9 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         uniform_product_name_id = validated_data.pop("uniform_product_name")
 
         related_product_types = validated_data.pop("related_product_types")
-        categories = validated_data.pop("category_ids")
-        conditions = validated_data.pop("condition_ids")
-        tags = validated_data.pop("tag_ids")
+        categories = validated_data.pop("categories")
+        conditions = validated_data.pop("conditions")
+        tags = validated_data.pop("tags")
 
         product_type = ProductType.objects.create(
             **validated_data, uniform_product_name=uniform_product_name_id
@@ -80,9 +89,9 @@ class ProductTypeSerializer(serializers.ModelSerializer):
     @transaction.atomic()
     def update(self, instance, validated_data):
         related_product_types = validated_data.pop("related_product_types", None)
-        categories = validated_data.pop("category_ids", None)
-        conditions = validated_data.pop("condition_ids", None)
-        tags = validated_data.pop("tag_ids", None)
+        categories = validated_data.pop("categories", None)
+        conditions = validated_data.pop("conditions", None)
+        tags = validated_data.pop("tags", None)
 
         instance = super().update(instance, validated_data)
 

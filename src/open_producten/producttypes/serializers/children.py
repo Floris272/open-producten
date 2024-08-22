@@ -88,11 +88,14 @@ class FileSerializer(serializers.ModelSerializer):
 class TagTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TagType
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class TagSerializer(serializers.ModelSerializer):
-    type = TagTypeSerializer()
+    type = TagTypeSerializer(read_only=True)
+    type_id = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=TagType.objects.all(), source="type"
+    )
 
     class Meta:
         model = Tag

@@ -5,11 +5,14 @@ from rest_framework_nested.routers import DefaultRouter, NestedSimpleRouter
 from open_producten.producttypes.views import (
     CategoryQuestionViewSet,
     CategoryViewSet,
+    ConditionViewSet,
     ProductTypeFieldViewSet,
     ProductTypeLinkViewSet,
     ProductTypePriceViewSet,
     ProductTypeQuestionViewSet,
     ProductTypeViewSet,
+    TagTypeViewSet,
+    TagViewSet,
 )
 
 ProductTypesRouter = DefaultRouter()
@@ -51,6 +54,10 @@ CategoriesQuestionRouter = NestedSimpleRouter(
 CategoriesQuestionRouter.register(
     r"questions", CategoryQuestionViewSet, basename="category-question"
 )
+
+ProductTypesRouter.register("conditions", ConditionViewSet, basename="condition")
+ProductTypesRouter.register("tags", TagViewSet, basename="tag")
+ProductTypesRouter.register("tagtypes", TagTypeViewSet, basename="tagtype")
 
 product_type_urlpatterns = [
     path("", include(ProductTypesRouter.urls)),

@@ -322,6 +322,145 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/conditions/:
+    get:
+      operationId: conditions_list
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Condition'
+          description: ''
+    post:
+      operationId: conditions_create
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+  /api/v1/conditions/{id}/:
+    get:
+      operationId: conditions_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    put:
+      operationId: conditions_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    patch:
+      operationId: conditions_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCondition'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    delete:
+      operationId: conditions_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
   /api/v1/producttypes/:
     get:
       operationId: producttypes_list
@@ -1187,6 +1326,284 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/tags/:
+    get:
+      operationId: tags_list
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+          description: ''
+    post:
+      operationId: tags_create
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+  /api/v1/tags/{id}/:
+    get:
+      operationId: tags_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    put:
+      operationId: tags_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    patch:
+      operationId: tags_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    delete:
+      operationId: tags_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/tagtypes/:
+    get:
+      operationId: tagtypes_list
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagType'
+          description: ''
+    post:
+      operationId: tagtypes_create
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+  /api/v1/tagtypes/{id}/:
+    get:
+      operationId: tagtypes_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    put:
+      operationId: tagtypes_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    patch:
+      operationId: tagtypes_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTagType'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    delete:
+      operationId: tagtypes_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     Category:
@@ -1416,6 +1833,26 @@ components:
           format: uri
           nullable: true
           description: Image of the category
+    PatchedCondition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Short name of the condition
+          maxLength: 100
+        question:
+          type: string
+          description: Question used in the question-answer game
+        positive_text:
+          type: string
+          description: Description how to meet the condition
+        negative_text:
+          type: string
+          description: Description how not to meet the condition
     PatchedField:
       type: object
       properties:
@@ -1629,6 +2066,41 @@ components:
           maxLength: 250
         answer:
           type: string
+    PatchedTag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TagType'
+          readOnly: true
+        type_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        name:
+          type: string
+          description: Name of the tag
+          maxLength: 100
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the tag
+    PatchedTagType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name of the tag type
+          maxLength: 100
     Price:
       type: object
       properties:
@@ -1915,7 +2387,13 @@ components:
           format: uuid
           readOnly: true
         type:
-          $ref: '#/components/schemas/TagType'
+          allOf:
+            - $ref: '#/components/schemas/TagType'
+          readOnly: true
+        type_id:
+          type: string
+          format: uuid
+          writeOnly: true
         name:
           type: string
           description: Name of the tag
@@ -1929,14 +2407,20 @@ components:
         - id
         - name
         - type
+        - type_id
     TagType:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         name:
           type: string
           description: Name of the tag type
           maxLength: 100
       required:
+        - id
         - name
     TypeEnum:
       enum:

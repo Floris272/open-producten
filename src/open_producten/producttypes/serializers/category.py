@@ -27,6 +27,7 @@ class CategorySerializer(serializers.ModelSerializer):
         queryset=ProductType.objects.all(),
         default=[],
         write_only=True,
+        source="product_types",
     )
 
     class Meta:
@@ -34,7 +35,7 @@ class CategorySerializer(serializers.ModelSerializer):
         exclude = ("path", "depth", "numchild")
 
     def create(self, validated_data):
-        product_types = validated_data.pop("product_type_ids")
+        product_types = validated_data.pop("product_types")
         parent_category = validated_data.pop("parent_category")
 
         if parent_category:

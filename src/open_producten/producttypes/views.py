@@ -1,20 +1,27 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework.viewsets import ModelViewSet
 
 from open_producten.producttypes.models import (
     Category,
+    Condition,
     Field,
     Link,
     Price,
     ProductType,
     Question,
+    Tag,
+    TagType,
 )
 from open_producten.producttypes.serializers.category import CategorySerializer
 from open_producten.producttypes.serializers.children import (
+    ConditionSerializer,
     FieldSerializer,
     LinkSerializer,
     PriceSerializer,
     QuestionSerializer,
+    TagSerializer,
+    TagTypeSerializer,
 )
 from open_producten.producttypes.serializers.producttype import ProductTypeSerializer
 
@@ -83,3 +90,21 @@ class CategoryQuestionViewSet(CategoryChildViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     lookup_url_kwarg = "question_id"
+
+
+class ConditionViewSet(ModelViewSet):
+    queryset = Condition.objects.all()
+    serializer_class = ConditionSerializer
+    lookup_url_kwarg = "id"
+
+
+class TagViewSet(ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    lookup_field = "id"
+
+
+class TagTypeViewSet(ModelViewSet):
+    queryset = TagType.objects.all()
+    serializer_class = TagTypeSerializer
+    lookup_field = "id"
