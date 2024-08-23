@@ -350,7 +350,7 @@ face==20.1.1
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   glom
-factory-boy==3.3.0
+factory-boy==3.3.1
     # via -r requirements/test-tools.in
 faker==26.0.0
     # via factory-boy
