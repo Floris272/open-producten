@@ -12,3 +12,6 @@ class FileInline(admin.TabularInline):
 class FileAdmin(admin.ModelAdmin):
     list_display = ("product_type", "file")
     list_filter = ("product_type",)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("product_type")

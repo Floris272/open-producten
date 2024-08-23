@@ -49,9 +49,7 @@ class ProductTypeAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        return qs.prefetch_related(
-            "links",
-        )
+        return qs.prefetch_related("tags", "categories")
 
     @admin.display(description="categories")
     def display_categories(self, obj):

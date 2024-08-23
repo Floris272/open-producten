@@ -19,3 +19,6 @@ class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ("product_type",)
     search_fields = ("product_type__name",)
     inlines = (DataInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("product_type")
