@@ -28,7 +28,7 @@ asn1crypto==1.5.1
     #   webauthn
 astroid==3.3.2
     # via pylint
-attrs==23.2.0
+attrs==24.2.0
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
