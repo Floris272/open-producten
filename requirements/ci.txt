@@ -310,7 +310,7 @@ djangorestframework-camel-case==1.4.2
     #   -r requirements/base.txt
     #   commonground-api-common
     #   notifications-api-common
-djangorestframework-gis==1.0
+djangorestframework-gis==1.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
