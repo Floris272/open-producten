@@ -35,7 +35,9 @@ class DataInlineFormSet(BaseInlineFormSet):
                 required_fields.remove(field)
 
         if required_fields:
-            raise ValidationError("Missing required fields.")
+            raise ValidationError(
+                f"Missing required fields: {', '.join(str(required_fields))}."
+            )
 
 
 class DataInline(admin.TabularInline):

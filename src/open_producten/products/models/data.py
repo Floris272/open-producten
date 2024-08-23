@@ -30,7 +30,7 @@ class Data(BaseModel):
         help_text=_("The field that this data belongs to"),
         related_name="data",
     )
-    data = models.CharField(_("Data"), help_text=_("The value of the field"))
+    value = models.CharField(_("Value"), help_text=_("The value of the field"))
 
     product = models.ForeignKey(
         Product,
@@ -51,73 +51,69 @@ class Data(BaseModel):
     def product_type(self):
         return self.field.product_type
 
-    formatters = {
+    PARSERS = {
         FieldTypes.NUMBER: float,
-        FieldTypes.CHECKBOX: lambda data: data.lower() == "true",
-        FieldTypes.DATE: lambda data: datetime.strptime(data, "%Y-%m-%d").date(),
-        FieldTypes.DATETIME: lambda data: datetime.strptime(
-            data, "%Y-%m-%dT%H:%M:%S%z"
+        FieldTypes.CHECKBOX: lambda value: value.lower() == "true",
+        FieldTypes.DATE: lambda value: datetime.strptime(value, "%Y-%m-%d").date(),
+        FieldTypes.DATETIME: lambda value: datetime.strptime(
+            value, "%Y-%m-%dT%H:%M:%S%z"
         ),
-        FieldTypes.TIME: lambda data: datetime.strptime(data, "%H:%M:%S").time(),
-        FieldTypes.MAP: lambda data: data.split(","),
-        FieldTypes.SELECT: lambda data: data.split(","),
+        FieldTypes.TIME: lambda value: datetime.strptime(value, "%H:%M:%S").time(),
+        FieldTypes.MAP: lambda value: value.split(","),
+        FieldTypes.SELECT: lambda value: value.split(","),
     }
 
-    cleaners = {
-        FieldTypes.BSN: lambda data: validate_bsn(data),
-        FieldTypes.CHECKBOX: lambda data: validate_checkbox(data),
-        FieldTypes.COSIGN: lambda data: validate_regex(
-            data, r"^.+@.+\..+$", FieldTypes.EMAIL
+    CLEANERS = {
+        FieldTypes.BSN: validate_bsn,
+        FieldTypes.CHECKBOX: validate_checkbox,
+        FieldTypes.COSIGN: lambda value: validate_regex(
+            value, r"^.+@.+\..+$", FieldTypes.EMAIL
         ),
-        FieldTypes.CURRENCY: lambda data: validate_regex(
-            data, r"^\d+,?\d{0,2}$", FieldTypes.CURRENCY
+        FieldTypes.CURRENCY: lambda value: validate_regex(
+            value, r"^\d+,?\d{0,2}$", FieldTypes.CURRENCY
         ),
-        FieldTypes.DATE: lambda data: validate_datetime_format(
-            data, "%Y-%m-%d", FieldTypes.DATE
+        FieldTypes.DATE: lambda value: validate_datetime_format(
+            value, "%Y-%m-%d", FieldTypes.DATE
         ),
-        FieldTypes.DATETIME: lambda data: validate_datetime_format(
-            data, "%Y-%m-%dT%H:%M:%S%z", FieldTypes.DATETIME
+        FieldTypes.DATETIME: lambda value: validate_datetime_format(
+            value, "%Y-%m-%dT%H:%M:%S%z", FieldTypes.DATETIME
         ),
-        FieldTypes.EMAIL: lambda data: validate_regex(
-            data, r"^.+@.+\..+$", FieldTypes.EMAIL
+        FieldTypes.EMAIL: lambda value: validate_regex(
+            value, r"^.+@.+\..+$", FieldTypes.EMAIL
         ),
-        FieldTypes.IBAN: lambda data: IBANValidator()(data),
-        FieldTypes.LICENSE_PLATE: lambda data: NLLicensePlateFieldValidator()(data),
-        FieldTypes.MAP: lambda data: validate_regex(
-            data, r"^\d+\.?\d*,\d+\.?\d*$", FieldTypes.MAP
+        FieldTypes.IBAN: IBANValidator(),
+        FieldTypes.LICENSE_PLATE: NLLicensePlateFieldValidator(),
+        FieldTypes.MAP: lambda value: validate_regex(
+            value, r"^\d+\.?\d*,\d+\.?\d*$", FieldTypes.MAP
         ),
-        FieldTypes.NUMBER: lambda data: validate_regex(
-            data, r"^\d+\.?\d*$", FieldTypes.NUMBER
+        FieldTypes.NUMBER: lambda value: validate_regex(
+            value, r"^\d+\.?\d*$", FieldTypes.NUMBER
         ),
-        # FieldTypes.PASSWORD STR
-        FieldTypes.PHONE_NUMBER: lambda data: validate_regex(
-            data, r"^[+0-9][- 0-9]+$", FieldTypes.PHONE_NUMBER
+        FieldTypes.PHONE_NUMBER: lambda value: validate_regex(
+            value, r"^[+0-9][- 0-9]+$", FieldTypes.PHONE_NUMBER
         ),
-        FieldTypes.POSTCODE: lambda data: validate_postal_code(data),
-        FieldTypes.SIGNATURE: lambda data: validate_regex(
-            data, r"^data:image/png;base64,.*$", FieldTypes.SIGNATURE
+        FieldTypes.POSTCODE: validate_postal_code,
+        FieldTypes.SIGNATURE: lambda value: validate_regex(
+            value, r"^data:image/png;base64,.*$", FieldTypes.SIGNATURE
         ),
-        # FieldTypes.TEXTFIELD STR
-        FieldTypes.TIME: lambda data: validate_datetime_format(
-            data, "%H:%M:%S", FieldTypes.TIME
+        FieldTypes.TIME: lambda value: validate_datetime_format(
+            value, "%H:%M:%S", FieldTypes.TIME
         ),
     }
 
-    choice_cleaners = {
-        FieldTypes.RADIO: lambda data, choices: validate_radio(data, choices),
-        FieldTypes.SELECT: lambda data, choices: validate_select(data, choices),
-        FieldTypes.SELECT_BOXES: lambda data, choices: validate_select_boxes(
-            data, choices
-        ),
+    CHOICE_CLEANERS = {
+        FieldTypes.RADIO: validate_radio,
+        FieldTypes.SELECT: validate_select,
+        FieldTypes.SELECT_BOXES: validate_select_boxes,
     }
 
     def format(self):
-        if self.field.type in self.formatters:
-            return self.formatters[self.field.type](self.data)
+        if self.field.type in self.PARSERS:
+            return self.PARSERS[self.field.type](self.value)
 
     def clean(self):
-        if self.field.type in self.cleaners:
-            self.cleaners[self.field.type](self.data)
+        if self.field.type in self.CLEANERS:
+            self.CLEANERS[self.field.type](self.value)
 
-        elif self.field.type in self.choice_cleaners:
-            self.choice_cleaners[self.field.type](self.data, self.field.choices)
+        elif self.field.type in self.CHOICE_CLEANERS:
+            self.CHOICE_CLEANERS[self.field.type](self.value, self.field.choices)

@@ -5,7 +5,7 @@ from django.test import TestCase
 
 import pytz
 
-from open_producten.producttypes.models import FieldTypes
+from open_producten.producttypes.models import Field, FieldTypes
 from open_producten.producttypes.tests.factories import FieldFactory
 
 from .factories import DataFactory
@@ -16,28 +16,28 @@ class TestData(TestCase):
     def test_format_number(self):
         field = FieldFactory.create(type=FieldTypes.NUMBER)
 
-        data = DataFactory.create(field=field, data="5")
+        data = DataFactory.create(field=field, value="5")
         self.assertEqual(data.format(), 5)
 
     def test_format_checkbox(self):
         field = FieldFactory.create(type=FieldTypes.CHECKBOX)
 
-        data = DataFactory.create(field=field, data="true")
+        data = DataFactory.create(field=field, value="true")
         self.assertEqual(data.format(), True)
 
-        data = DataFactory.create(field=field, data="false")
+        data = DataFactory.create(field=field, value="false")
         self.assertEqual(data.format(), False)
 
     def test_format_date(self):
         field = FieldFactory.create(type=FieldTypes.DATE)
 
-        data = DataFactory.create(field=field, data="2024-07-16")
+        data = DataFactory.create(field=field, value="2024-07-16")
         self.assertEqual(data.format(), datetime.date(2024, 7, 16))
 
     def test_format_datetime(self):
         field = FieldFactory.create(type=FieldTypes.DATETIME)
 
-        data = DataFactory.create(field=field, data="2024-07-11T12:04:03+02:00")
+        data = DataFactory.create(field=field, value="2024-07-11T12:04:03+02:00")
         tz = pytz.timezone("Europe/Amsterdam")
 
         self.assertEqual(
@@ -47,237 +47,176 @@ class TestData(TestCase):
     def test_format_time(self):
         field = FieldFactory.create(type=FieldTypes.TIME)
 
-        data = DataFactory.create(field=field, data="12:33:01")
+        data = DataFactory.create(field=field, value="12:33:01")
         self.assertEqual(data.format(), datetime.time(12, 33, 1))
 
     def test_format_map(self):
         field = FieldFactory.create(type=FieldTypes.MAP)
 
         data = DataFactory.create(
-            field=field, data="52.13309377014838,5.339086446962994"
+            field=field, value="52.13309377014838,5.339086446962994"
         )
         self.assertEqual(data.format(), ["52.13309377014838", "5.339086446962994"])
 
     def test_format_select(self):
         field = FieldFactory.create(type=FieldTypes.SELECT)
 
-        data = DataFactory.create(field=field, data="abc,def")
+        data = DataFactory.create(field=field, value="abc,def")
         self.assertEqual(data.format(), ["abc", "def"])
 
-    def test_clean_bsn(self):
+    def _subtest_invalid_data_values(self, field: Field, *invalid_values):
+        for invalid_value in invalid_values:
+            with self.subTest(f"{invalid_value} should raise an error"):
+                with self.assertRaises(ValidationError):
+                    DataFactory.build(field=field, value=invalid_value).clean()
+
+    def _subtest_valid_data_values(self, field: Field, *valid_values):
+        for valid_value in valid_values:
+            with self.subTest(f"{valid_value} should raise not an error"):
+                DataFactory.build(field=field, value=valid_value).clean()
+
+    def test_clean_bsn_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.BSN)
+        self._subtest_invalid_data_values(field, "1234", "abc", "123456789")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="1234").clean()
+    def test_clean_bsn_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.BSN)
+        self._subtest_valid_data_values(field, "111222333")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abc").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="123456789").clean()
-
-        DataFactory.build(field=field, data="111222333").clean()
-
-    def test_clean_checkbox(self):
+    def test_clean_checkbox_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.CHECKBOX)
+        self._subtest_invalid_data_values(field, "1234", True)
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="1234").clean()
+    def test_clean_checkbox_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.CHECKBOX)
+        self._subtest_valid_data_values(field, "true", "false")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data=True).clean()
-
-        DataFactory.build(field=field, data="true").clean()
-        DataFactory.build(field=field, data="false").clean()
-
-    def test_clean_cosign(self):
+    def test_clean_cosign_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.COSIGN)
+        self._subtest_invalid_data_values(field, "abcde", "abcde@", "abcde@gmail.")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_cosign_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.COSIGN)
+        self._subtest_valid_data_values(field, "abcde@gmail.com")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde@").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde@gmail.").clean()
-
-        DataFactory.build(field=field, data="abcde@gmail.com").clean()
-
-    def test_clean_currency(self):
+    def test_clean_currency_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.CURRENCY)
+        self._subtest_invalid_data_values(field, "abcde", "123a")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_currency_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.CURRENCY)
+        self._subtest_valid_data_values(field, "123124", "123124,12")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="123a").clean()
-
-        DataFactory.build(field=field, data="123124").clean()
-        DataFactory.build(field=field, data="123124,12").clean()
-
-    def test_clean_date(self):
+    def test_clean_date_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.DATE)
+        self._subtest_invalid_data_values(field, "abc", "20240101", "2024-13-01")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abc").clean()
+    def test_clean_date_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.DATE)
+        self._subtest_valid_data_values(field, "2024-01-01")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="20240101").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="2024-13-01").clean()
-
-        DataFactory.build(field=field, data="2024-01-01").clean()
-
-    def test_clean_datetime(self):
+    def test_clean_datetime_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.DATETIME)
+        self._subtest_invalid_data_values(field, "abc", "20241001", "2023-13-01")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abc").clean()
+    def test_clean_datetime_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.DATETIME)
+        self._subtest_valid_data_values(field, "2024-01-01T13:00:00+02:00")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="20241001").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="2023-13-01").clean()
-
-        DataFactory.build(field=field, data="2024-01-01T13:00:00+02:00").clean()
-
-    def test_clean_email(self):
+    def test_clean_email_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.EMAIL)
+        self._subtest_invalid_data_values(field, "abcde", "xyz@", "abcde@gmail.")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_email_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.EMAIL)
+        self._subtest_valid_data_values(field, "abcde@gmail.com")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="xyz@").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde@gmail.").clean()
-
-        DataFactory.build(field=field, data="abcde@gmail.com").clean()
-
-    def test_clean_iban(self):
+    def test_clean_iban_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.IBAN)
+        self._subtest_invalid_data_values(field, "0001234567", "NL10INGB0001234567")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="0001234567").clean()
+    def test_clean_iban_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.IBAN)
+        self._subtest_valid_data_values(field, "NL20INGB0001234567")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="NL10INGB0001234567").clean()
-
-        DataFactory.build(field=field, data="NL20INGB0001234567").clean()
-
-    def test_clean_license_plate(self):
+    def test_clean_license_plate_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.LICENSE_PLATE)
+        self._subtest_invalid_data_values(field, "abcde", "abc123ad")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_license_plate_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.LICENSE_PLATE)
+        self._subtest_valid_data_values(field, "123-AA-1")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abc123ad").clean()
-
-        DataFactory.build(field=field, data="123-AA-1").clean()
-
-    def test_clean_map(self):
+    def test_clean_map_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.MAP)
+        self._subtest_invalid_data_values(field, "abcde", "42, 21")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_map_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.MAP)
+        self._subtest_valid_data_values(field, "42,12", "42.1294323,12.9283498")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="42, 21").clean()
-
-        DataFactory.build(field=field, data="42,12").clean()
-        DataFactory.build(field=field, data="42.1294323,12.9283498").clean()
-
-    def test_clean_number(self):
+    def test_clean_number_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.NUMBER)
+        self._subtest_invalid_data_values(field, "abcde")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_number_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.NUMBER)
+        self._subtest_valid_data_values(field, "42.12", "42.1294323")
 
-        DataFactory.build(field=field, data="42.12").clean()
-        DataFactory.build(field=field, data="42.1294323").clean()
-
-    def test_clean_phone_number(self):
+    def test_clean_phone_number_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.PHONE_NUMBER)
+        self._subtest_invalid_data_values(field, "abcde")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abcde").clean()
+    def test_clean_phone_number_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.PHONE_NUMBER)
+        self._subtest_valid_data_values(field, "0612165228", "+31 6 12 16 52 28")
 
-        DataFactory.build(field=field, data="0612165228").clean()
-        DataFactory.build(field=field, data="+31 6 12 16 52 28").clean()
-
-    def test_clean_postcode(self):
+    def test_clean_postcode_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.POSTCODE)
+        self._subtest_invalid_data_values(field, "AB 3123", "0334 AA")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="AB 3123").clean()
+    def test_clean_postcode_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.POSTCODE)
+        self._subtest_valid_data_values(field, "3441ER", "3441 ER")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="0334 AA").clean()
-
-        DataFactory.build(field=field, data="3441ER").clean()
-        DataFactory.build(field=field, data="3441 ER").clean()
-
-    def test_clean_radio(self):
+    def test_clean_radio_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.RADIO, choices=["a", "b"])
+        self._subtest_invalid_data_values(field, "d")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="d").clean()
+    def test_clean_radio_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.RADIO, choices=["a", "b"])
+        self._subtest_valid_data_values(field, "a", "b")
 
-        DataFactory.build(field=field, data="a").clean()
-        DataFactory.build(field=field, data="b").clean()
-
-    def test_clean_select(self):
+    def test_clean_select_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.SELECT, choices=["a", "b"])
+        self._subtest_invalid_data_values(field, "", "d,", "d", "a,d")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="").clean()
+    def test_clean_select_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.SELECT, choices=["a", "b"])
+        self._subtest_valid_data_values(field, "a", "a,b")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="d,").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="d").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="a,d").clean()
-
-        DataFactory.build(field=field, data="a").clean()
-        DataFactory.build(field=field, data="a,b").clean()
-
-    def test_clean_select_boxes(self):
+    def test_clean_select_boxes_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.SELECT_BOXES, choices=["a", "b"])
+        self._subtest_invalid_data_values(
+            field, ")(", '{"a": true}', '{"a": true, "d": true}'
+        )
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data=")(").clean()
+    def test_clean_select_boxes_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.SELECT_BOXES, choices=["a", "b"])
+        self._subtest_valid_data_values(field, '{"a": true, "b": true}')
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data='{"a": true}').clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data='{"a": true, "d": true}').clean()
-
-        DataFactory.build(field=field, data='{"a": true, "b": true}').clean()
-
-    def test_clean_signature(self):
+    def test_clean_signature_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.SIGNATURE)
+        self._subtest_invalid_data_values(field, "signature")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="signature").clean()
+    def test_clean_signature_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.SIGNATURE)
+        self._subtest_valid_data_values(field, "data:image/png;base64,A812EEAa")
 
-        DataFactory.build(field=field, data="data:image/png;base64,A812EEAa").clean()
-
-    def test_clean_time(self):
+    def test_clean_time_raises_on_invalid_value(self):
         field = FieldFactory.create(type=FieldTypes.TIME)
+        self._subtest_invalid_data_values(field, "abc", "120302")
 
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="abc").clean()
-
-        with self.assertRaises(ValidationError):
-            DataFactory.build(field=field, data="120302").clean()
-
-        DataFactory.build(field=field, data="12:00:00").clean()
+    def test_clean_time_validates_on_valid_value(self):
+        field = FieldFactory.create(type=FieldTypes.TIME)
+        self._subtest_valid_data_values(field, "12:00:00")

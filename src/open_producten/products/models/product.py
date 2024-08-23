@@ -27,7 +27,7 @@ class Product(BasePublishableModel):
     bsn = models.CharField(
         _("BSN"),
         help_text=_(
-            "The BSN of the product owner. Bsn of 8 characters needs a leading 0."
+            "The BSN of the product owner. BSN of 8 characters needs a leading 0."
         ),
         validators=[validate_bsn],
         null=True,
