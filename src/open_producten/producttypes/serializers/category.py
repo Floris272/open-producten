@@ -1,16 +1,19 @@
+from django.db import transaction
+
 from rest_framework import serializers
 
 from open_producten.producttypes.models import Category, ProductType
+from open_producten.utils.serializers import check_for_duplicates_in_array
 
-from .children import QuestionSerializer, UpnSerializer
+from .children import QuestionSerializer, UniformProductNameSerializer
 
 
 class SimpleProductTypeSerializer(serializers.ModelSerializer):
-    uniform_product_name = UpnSerializer()
+    uniform_product_name = UniformProductNameSerializer()
 
     class Meta:
         model = ProductType
-        exclude = ("id", "categories", "conditions", "tags", "related_product_types")
+        exclude = ("categories", "conditions", "tags", "related_product_types")
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -34,6 +37,16 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         exclude = ("path", "depth", "numchild")
 
+    def _handle_relations(self, instance, product_types):
+        errors = dict()
+        if product_types is not None:
+            check_for_duplicates_in_array(product_types, "product_type_ids", errors)
+            instance.product_types.set(product_types)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+    @transaction.atomic()
     def create(self, validated_data):
         product_types = validated_data.pop("product_types")
         parent_category = validated_data.pop("parent_category")
@@ -43,13 +56,14 @@ class CategorySerializer(serializers.ModelSerializer):
         else:
             category = Category.add_root(**validated_data)
 
-        category.product_types.set(product_types)
+        self._handle_relations(category, product_types)
         category.save()
 
         return category
 
+    @transaction.atomic()
     def update(self, instance, validated_data):
-        product_types = validated_data.pop("product_type_ids", None)
+        product_types = validated_data.pop("product_types", None)
         parent_category = validated_data.pop(
             "parent_category", "ignore"
         )  # None is a valid value
@@ -66,9 +80,6 @@ class CategorySerializer(serializers.ModelSerializer):
             instance.refresh_from_db()
 
         instance = super().update(instance, validated_data)
-
-        if product_types is not None:
-            instance.product_types.set(product_types)
+        self._handle_relations(instance, product_types)
         instance.save()
-
         return instance

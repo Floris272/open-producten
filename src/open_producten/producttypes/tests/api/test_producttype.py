@@ -1,5 +1,7 @@
 from django.forms import model_to_dict
 
+from rest_framework.exceptions import ErrorDetail
+
 from open_producten.producttypes.models import Link, ProductType, Tag
 from open_producten.producttypes.tests.factories import (
     CategoryFactory,
@@ -9,7 +11,7 @@ from open_producten.producttypes.tests.factories import (
     TagFactory,
     UniformProductNameFactory,
 )
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def product_type_to_dict(product_type):
@@ -32,6 +34,9 @@ def product_type_to_dict(product_type):
     product_type_dict["updated_on"] = str(
         product_type.updated_on.astimezone().isoformat()
     )
+    product_type_dict["uniform_product_name"] = model_to_dict(
+        product_type.uniform_product_name
+    ) | {"id": str(product_type.uniform_product_name.id)}
 
     return product_type_dict
 
@@ -45,10 +50,10 @@ class TestProducttypeViewSet(BaseApiTestCase):
             "name": "test-product-type",
             "summary": "test",
             "content": "test test",
-            "uniform_product_name": upn.id,
+            "uniform_product_name_id": upn.id,
         }
 
-        self.endpoint = "/api/v1/producttypes/"
+        self.path = "/api/v1/producttypes/"
 
     def test_create_minimal_product_type(self):
         response = self.post(self.data)
@@ -103,6 +108,43 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(ProductType.objects.count(), 1)
         self.assertEqual(
             ProductType.objects.first().conditions.first().name, condition.name
+        )
+
+    def test_create_product_type_with_duplicate_ids_returns_error(self):
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = self.data | {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": ErrorDetail(
+                    string=f"Duplicate Category id: {category.id} at index 1",
+                    code="invalid",
+                ),
+                "condition_ids": ErrorDetail(
+                    string=f"Duplicate Condition id: {condition.id} at index 1",
+                    code="invalid",
+                ),
+                "related_product_types": ErrorDetail(
+                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                    code="invalid",
+                ),
+                "tag_ids": ErrorDetail(
+                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                ),
+            },
         )
 
     def test_update_minimal_product_type(self):
@@ -162,6 +204,44 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(ProductType.objects.count(), 1)
         self.assertEqual(product_type.conditions.first().name, condition.name)
 
+    def test_update_product_type_with_duplicate_ids_returns_error(self):
+        product_type = ProductTypeFactory.create()
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = self.data | {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": ErrorDetail(
+                    string=f"Duplicate Category id: {category.id} at index 1",
+                    code="invalid",
+                ),
+                "condition_ids": ErrorDetail(
+                    string=f"Duplicate Condition id: {condition.id} at index 1",
+                    code="invalid",
+                ),
+                "related_product_types": ErrorDetail(
+                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                    code="invalid",
+                ),
+                "tag_ids": ErrorDetail(
+                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                ),
+            },
+        )
+
     def test_partial_update_product_type(self):
         product_type = ProductTypeFactory.create()
 
@@ -205,6 +285,44 @@ class TestProducttypeViewSet(BaseApiTestCase):
         product_type.refresh_from_db()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(product_type.conditions.count(), 1)
+
+    def test_partial_update_product_type_with_duplicate_ids_returns_error(self):
+        product_type = ProductTypeFactory.create()
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.patch(product_type.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": ErrorDetail(
+                    string=f"Duplicate Category id: {category.id} at index 1",
+                    code="invalid",
+                ),
+                "condition_ids": ErrorDetail(
+                    string=f"Duplicate Condition id: {condition.id} at index 1",
+                    code="invalid",
+                ),
+                "related_product_types": ErrorDetail(
+                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                    code="invalid",
+                ),
+                "tag_ids": ErrorDetail(
+                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                ),
+            },
+        )
 
     def test_read_product_types(self):
         product_type = ProductTypeFactory.create()

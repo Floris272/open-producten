@@ -2,7 +2,7 @@ from django.forms import model_to_dict
 
 from open_producten.producttypes.models import Category, Question
 from open_producten.producttypes.tests.factories import CategoryFactory, QuestionFactory
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def question_to_dict(question):
@@ -16,7 +16,7 @@ class TestCategoryQuestion(BaseApiTestCase):
     def setUp(self):
         self.category = CategoryFactory.create()
         self.data = {"question": "18?", "answer": "eligible"}
-        self.endpoint = f"/api/v1/categories/{self.category.id}/questions/"
+        self.path = f"/api/v1/categories/{self.category.id}/questions/"
 
     def create_question(self):
         return QuestionFactory.create(category=self.category)

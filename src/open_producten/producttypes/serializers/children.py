@@ -1,7 +1,6 @@
 from django.db import transaction
 
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from ..models import (
     Condition,
@@ -48,27 +47,46 @@ class PriceSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         options = validated_data.pop("options", None)
         price = super().update(instance, validated_data)
-        current_option_ids = list(price.options.values_list("id", flat=True))
+        option_errors = []
 
         if options is not None:
-            for option in options:
+            current_option_ids = set(price.options.values_list("id", flat=True))
+            seen_option_ids = set()
+            for idx, option in enumerate(options):
                 option_id = option.pop("id", None)
                 if option_id is None:
                     PriceOption.objects.create(price=price, **option)
 
                 elif option_id in current_option_ids:
+
+                    if option_id in seen_option_ids:
+                        option_errors.append(
+                            f"Duplicate option id {option_id} at index {idx}"
+                        )
+                    seen_option_ids.add(option_id)
+
                     existing_option = PriceOption.objects.get(id=option_id)
                     existing_option.amount = option["amount"]
                     existing_option.description = option["description"]
                     existing_option.save()
-                    current_option_ids.remove(option_id)
 
                 else:
-                    raise ValidationError(
-                        f"Price option id {option_id} is not part of to price object."
-                    )
+                    try:
+                        PriceOption.objects.get(id=option_id)
+                        option_errors.append(
+                            f"Price option id {option_id} at index {idx} is not part of price object"
+                        )
+                    except PriceOption.DoesNotExist:
+                        option_errors.append(
+                            f"Price option id {option_id} at index {idx} does not exist"
+                        )
 
-            PriceOption.objects.filter(id__in=current_option_ids).delete()
+            if option_errors:
+                raise serializers.ValidationError({"options": option_errors})
+
+            PriceOption.objects.filter(
+                id__in=(current_option_ids - seen_option_ids)
+            ).delete()
 
         return price
 
@@ -102,7 +120,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UpnSerializer(serializers.ModelSerializer):
+class UniformProductNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = UniformProductName
         fields = "__all__"

@@ -77,30 +77,10 @@ Open Producten is an API to manage product types and products.
 
 API_VERSION = "0.0.1"
 
-SPECTACULAR_SETTINGS = {
+SPECTACULAR_SETTINGS = {  # TODO: may need to be expanded.
     "SCHEMA_PATH_PREFIX": "/api/v1",
     "TITLE": "Open Producten API",
     "DESCRIPTION": _DESCRIPTION,
-    # "POSTPROCESSING_HOOKS": [
-    #     "drf_spectacular.hooks.postprocess_schema_enums",
-    #     "drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields",
-    # ],
     "TOS": None,
-    # Optional: MAY contain "name", "url", "email"
-    # "CONTACT": {
-    #     "url": "https://github.com/maykinmedia/open-producten",
-    #     "email": "support@maykinmedia.nl",
-    # },
-    # Optional: MUST contain "name", MAY contain URL
-    # "LICENSE": {
-    #     "name": "UNLICENSED",
-    # },
     "VERSION": API_VERSION,
-    # Tags defined in the global scope
-    "TAGS": [],
-    # Optional: MUST contain 'url', may contain "description"
-    # "EXTERNAL_DOCS": {
-    #     "description": "Functional and technical documentation",
-    #     "url": "https://open-producten.readthedocs.io/",
-    # },
 }

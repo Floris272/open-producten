@@ -1962,9 +1962,14 @@ components:
             type: string
             format: uuid
           default: [ ]
-        uniform_product_name:
+        uniform_product_name_id:
           type: string
           format: uuid
+          writeOnly: true
+        uniform_product_name:
+          allOf:
+            - $ref: '#/components/schemas/UniformProductName'
+          readOnly: true
         conditions:
           type: array
           items:
@@ -2138,6 +2143,7 @@ components:
           description: Short description of the option
           maxLength: 100
       required:
+        - amount
         - description
     ProductType:
       type: object
@@ -2164,9 +2170,14 @@ components:
             type: string
             format: uuid
           default: [ ]
-        uniform_product_name:
+        uniform_product_name_id:
           type: string
           format: uuid
+          writeOnly: true
+        uniform_product_name:
+          allOf:
+            - $ref: '#/components/schemas/UniformProductName'
+          readOnly: true
         conditions:
           type: array
           items:
@@ -2269,6 +2280,7 @@ components:
         - questions
         - tags
         - uniform_product_name
+        - uniform_product_name_id
         - updated_on
     Question:
       type: object
@@ -2326,8 +2338,12 @@ components:
     SimpleProductType:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         uniform_product_name:
-          $ref: '#/components/schemas/Upn'
+          $ref: '#/components/schemas/UniformProductName'
         published:
           type: boolean
           description: Whether the object is accessible through the API.
@@ -2376,6 +2392,7 @@ components:
       required:
         - content
         - created_on
+        - id
         - name
         - uniform_product_name
         - updated_on
@@ -2468,7 +2485,7 @@ components:
         * `signature` - Signature
         * `textfield` - Textfield
         * `time` - Time
-    Upn:
+    UniformProductName:
       type: object
       properties:
         id:

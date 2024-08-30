@@ -57,32 +57,25 @@ urlpatterns = [
     # Simply show the master template.
     path("", TemplateView.as_view(template_name="master.html"), name="root"),
     path(
-        "api/",
+        "api/v1/",
         include(
             [
                 path(
-                    "v1/",
-                    include(
-                        [
-                            path(
-                                "schema/",
-                                SpectacularAPIView.as_view(schema=None),
-                                name="schema",
-                            ),
-                            path(
-                                "schema/swagger-ui/",
-                                SpectacularSwaggerView.as_view(url_name="schema"),
-                                name="swagger-ui",
-                            ),
-                            path(
-                                "schema/redoc/",
-                                SpectacularRedocView.as_view(url_name="schema"),
-                                name="redoc",
-                            ),
-                            path("", include(product_type_urlpatterns)),
-                        ]
-                    ),
-                )
+                    "schema/",
+                    SpectacularAPIView.as_view(schema=None),
+                    name="schema",
+                ),
+                path(
+                    "schema/swagger-ui/",
+                    SpectacularSwaggerView.as_view(url_name="schema"),
+                    name="swagger-ui",
+                ),
+                path(
+                    "schema/redoc/",
+                    SpectacularRedocView.as_view(url_name="schema"),
+                    name="redoc",
+                ),
+                path("", include(product_type_urlpatterns)),
             ]
         ),
     ),

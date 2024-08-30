@@ -1,7 +1,7 @@
 from django.forms import model_to_dict
 
 from open_producten.producttypes.models import Link, ProductType
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 from ..factories import LinkFactory, ProductTypeFactory
 
@@ -15,7 +15,7 @@ class TestProductTypeLink(BaseApiTestCase):
     def setUp(self):
         self.product_type = ProductTypeFactory.create()
         self.data = {"name": "test link", "url": "https://www.google.com"}
-        self.endpoint = f"/api/v1/producttypes/{self.product_type.id}/links/"
+        self.path = f"/api/v1/producttypes/{self.product_type.id}/links/"
 
     def create_link(self):
         return LinkFactory.create(product_type=self.product_type)

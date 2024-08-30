@@ -1,4 +1,4 @@
-import factory
+import factory.fuzzy
 
 from ..models import (
     Category,
@@ -92,6 +92,7 @@ class PriceFactory(factory.django.DjangoModelFactory):
 
 class PriceOptionFactory(factory.django.DjangoModelFactory):
     description = factory.Faker("sentence")
+    amount = factory.fuzzy.FuzzyDecimal(1, 10)
 
     class Meta:
         model = PriceOption

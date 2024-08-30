@@ -1,7 +1,7 @@
 from django.forms import model_to_dict
 
 from open_producten.producttypes.models import Condition
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 from ..factories import ConditionFactory
 
@@ -20,7 +20,7 @@ class TestProductTypeCondition(BaseApiTestCase):
             "positive_text": "+",
             "negative_text": "-",
         }
-        self.endpoint = "/api/v1/conditions/"
+        self.path = "/api/v1/conditions/"
 
     def create_condition(self):
         return ConditionFactory.create()

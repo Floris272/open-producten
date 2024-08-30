@@ -46,7 +46,6 @@ class PriceOption(BaseModel):
         verbose_name=_("Price"),
         decimal_places=2,
         max_digits=8,
-        default=0,
         validators=[MinValueValidator(Decimal("0.01"))],
         help_text=_("The amount of the price option"),
     )

@@ -75,10 +75,10 @@ class Field(BaseModel):
 
     def clean(self):
         if self.type in self.choice_fields and not self.choices:
-            raise ValidationError(f"Choices are required for {self.type}")
+            raise ValidationError({"choices": f"Choices are required for {self.type}"})
 
         if self.choices and self.type not in self.choice_fields:
-            raise ValidationError(f"{self.type} cannot have choices")
+            raise ValidationError({"choices": f"{self.type} cannot have choices"})
 
     def __str__(self):
         return self.name

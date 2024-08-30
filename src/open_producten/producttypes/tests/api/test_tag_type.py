@@ -1,7 +1,7 @@
 from django.forms import model_to_dict
 
 from open_producten.producttypes.models import TagType
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 from ..factories import TagTypeFactory
 
@@ -15,7 +15,7 @@ class TestProductTypeTagType(BaseApiTestCase):
 
     def setUp(self):
         self.data = {"name": "test tag_type"}
-        self.endpoint = "/api/v1/tagtypes/"
+        self.path = "/api/v1/tagtypes/"
 
     def create_tag(self):
         return TagTypeFactory.create()

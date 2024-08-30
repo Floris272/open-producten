@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.forms import modelformset_factory
 from django.test import TestCase
 
-from open_producten.utils.tests.test_helpers import build_formset_data
+from open_producten.utils.tests.helpers import build_formset_data
 
 from ..admin.category import CategoryAdmin, CategoryAdminForm, CategoryAdminFormSet
 from ..models import Category

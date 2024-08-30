@@ -1,12 +1,14 @@
 from django.forms import model_to_dict
 
+from rest_framework.exceptions import ErrorDetail
+
 from open_producten.producttypes.models import Category, Link
 from open_producten.producttypes.tests.factories import (
     CategoryFactory,
     ProductTypeFactory,
     QuestionFactory,
 )
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def category_to_dict(category):
@@ -31,7 +33,7 @@ class TestCategoryViewSet(BaseApiTestCase):
             "name": "test-category",
             "parent_category": None,
         }
-        self.endpoint = "/api/v1/categories/"
+        self.path = "/api/v1/categories/"
 
     def test_create_minimal_category(self):
         response = self.post(self.data)
@@ -60,6 +62,23 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Category.objects.count(), 1)
         self.assertEqual(Category.objects.first().product_types.first(), product_type)
+
+    def test_create_parent_with_duplicate_product_types_returns_error(self):
+        product_type = ProductTypeFactory.create()
+        data = self.data | {"product_type_ids": [product_type.id, product_type.id]}
+
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "product_type_ids": ErrorDetail(
+                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                    code="invalid",
+                )
+            },
+        )
 
     def test_update_change_from_root_to_parent(self):
         new_parent = CategoryFactory.create()
@@ -99,6 +118,26 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(category.get_parent(update=True), new_parent_category)
 
+    def test_update_parent_with_duplicate_product_types_returns_error(self):
+        category = CategoryFactory.create()
+        product_type = ProductTypeFactory.create()
+        data = self.data | {"product_type_ids": [product_type.id, product_type.id]}
+
+        response = self.put(category.id, data)
+
+        category.refresh_from_db()
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "product_type_ids": ErrorDetail(
+                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                    code="invalid",
+                )
+            },
+        )
+
     def test_partial_update(self):
         parent_category = CategoryFactory.create()
         category = parent_category.add_child(name="test-category")
@@ -137,6 +176,26 @@ class TestCategoryViewSet(BaseApiTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(category.get_parent(update=True), None)
+
+    def test_partial_update_parent_with_duplicate_product_types_returns_error(self):
+        category = CategoryFactory.create()
+        product_type = ProductTypeFactory.create()
+        data = {"product_type_ids": [product_type.id, product_type.id]}
+
+        response = self.patch(category.id, data)
+
+        category.refresh_from_db()
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "product_type_ids": ErrorDetail(
+                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                    code="invalid",
+                )
+            },
+        )
 
     def test_read_categories(self):
         category = CategoryFactory.create()

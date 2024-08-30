@@ -1,9 +1,11 @@
 import datetime
+import uuid
 from decimal import Decimal
 
 from django.forms import model_to_dict
 
 from freezegun import freeze_time
+from rest_framework.exceptions import ErrorDetail
 
 from open_producten.producttypes.models import Price, PriceOption, ProductType
 from open_producten.producttypes.tests.factories import (
@@ -11,7 +13,7 @@ from open_producten.producttypes.tests.factories import (
     PriceOptionFactory,
     ProductTypeFactory,
 )
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def price_to_dict(price):
@@ -28,7 +30,7 @@ class TestProductTypePrice(BaseApiTestCase):
     def setUp(self):
         self.product_type = ProductTypeFactory()
         self.price_data = {"valid_from": datetime.date(2024, 1, 2)}
-        self.endpoint = f"/api/v1/producttypes/{self.product_type.id}/prices/"
+        self.path = f"/api/v1/producttypes/{self.product_type.id}/prices/"
 
     def create_price(self):
         return PriceFactory.create(
@@ -115,7 +117,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.count(), 1)
         self.assertEqual(PriceOption.objects.first().amount, Decimal("20"))
 
-    def test_exception_when_option_not_part_of_price(self):
+    def test_update_price_with_option_not_part_of_price_returns_error(self):
         price = self.create_price()
 
         option = PriceOptionFactory.create(price=PriceFactory.create())
@@ -130,6 +132,69 @@ class TestProductTypePrice(BaseApiTestCase):
         response = self.put(price.id, data)
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string=f"Price option id {option.id} at index 0 is not part of price object",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
+
+    def test_update_price_with_option_with_unknown_id_returns_error(self):
+        price = self.create_price()
+        non_existing_id = uuid.uuid4()
+
+        data = {
+            "valid_from": price.valid_from,
+            "options": [{"id": non_existing_id, "amount": "20", "description": "test"}],
+        }
+
+        response = self.put(price.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string=f"Price option id {non_existing_id} at index 0 does not exist",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
+
+    def test_update_price_with_duplicate_option_ids_returns_error(self):
+        price = self.create_price()
+
+        option = PriceOptionFactory.create(price=price)
+
+        data = {
+            "valid_from": price.valid_from,
+            "options": [
+                {"id": option.id, "amount": "20", "description": option.description},
+                {"id": option.id, "amount": "40", "description": option.description},
+            ],
+        }
+
+        response = self.put(price.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string=f"Duplicate option id {option.id} at index 1",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
 
     def test_partial_update_price(self):
         price = self.create_price()
@@ -189,6 +254,48 @@ class TestProductTypePrice(BaseApiTestCase):
         )
         self.assertEqual(PriceOption.objects.count(), 1)
         self.assertEqual(PriceOption.objects.first().description, "test")
+
+    def test_partial_update_with_multiple_errors(self):
+        price = self.create_price()
+        option = PriceOptionFactory.create(price=price)
+        option_of_other_price = PriceOptionFactory.create(price=PriceFactory.create())
+        non_existing_option = uuid.uuid4()
+
+        data = {
+            "options": [
+                {"id": option.id, "amount": "20", "description": option.description},
+                {"id": option.id, "amount": "20", "description": option.description},
+                {
+                    "id": option_of_other_price.id,
+                    "amount": "30",
+                    "description": option_of_other_price.description,
+                },
+                {"id": non_existing_option, "amount": "30", "description": "test"},
+            ]
+        }
+
+        response = self.patch(price.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string=f"Duplicate option id {option.id} at index 1",
+                        code="invalid",
+                    ),
+                    ErrorDetail(
+                        string=f"Price option id {option_of_other_price.id} at index 2 is not part of price object",
+                        code="invalid",
+                    ),
+                    ErrorDetail(
+                        string=f"Price option id {non_existing_option} at index 3 does not exist",
+                        code="invalid",
+                    ),
+                ]
+            },
+        )
 
     def test_read_prices(self):
         price = self.create_price()

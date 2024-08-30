@@ -5,7 +5,7 @@ from open_producten.producttypes.tests.factories import (
     ProductTypeFactory,
     QuestionFactory,
 )
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def question_to_dict(question):
@@ -19,7 +19,7 @@ class TestProductTypeQuestion(BaseApiTestCase):
     def setUp(self):
         self.product_type = ProductTypeFactory.create()
         self.data = {"question": "18?", "answer": "eligible"}
-        self.endpoint = f"/api/v1/producttypes/{self.product_type.id}/questions/"
+        self.path = f"/api/v1/producttypes/{self.product_type.id}/questions/"
 
     def create_question(self):
         return QuestionFactory.create(product_type=self.product_type)

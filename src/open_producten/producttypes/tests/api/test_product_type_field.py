@@ -2,7 +2,7 @@ from django.forms import model_to_dict
 
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
-from open_producten.utils.tests.test_cases import BaseApiTestCase
+from open_producten.utils.tests.cases import BaseApiTestCase
 
 
 def field_to_dict(field):
@@ -14,7 +14,7 @@ class TestProductTypeField(BaseApiTestCase):
     def setUp(self):
         self.product_type = ProductTypeFactory.create()
         self.data = {"name": "test field", "description": "test", "type": "textfield"}
-        self.endpoint = f"/api/v1/producttypes/{self.product_type.id}/fields/"
+        self.path = f"/api/v1/producttypes/{self.product_type.id}/fields/"
 
     def create_field(self):
         return FieldFactory.create(product_type=self.product_type)
