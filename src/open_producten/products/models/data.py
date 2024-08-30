@@ -107,7 +107,7 @@ class Data(BaseModel):
         FieldTypes.SELECT_BOXES: validate_select_boxes,
     }
 
-    def format(self):
+    def parse(self):
         if self.field.type in self.PARSERS:
             return self.PARSERS[self.field.type](self.value)
 

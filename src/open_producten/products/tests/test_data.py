@@ -13,56 +13,56 @@ from .factories import DataFactory
 
 class TestData(TestCase):
 
-    def test_format_number(self):
+    def test_parse_number(self):
         field = FieldFactory.create(type=FieldTypes.NUMBER)
 
         data = DataFactory.create(field=field, value="5")
-        self.assertEqual(data.format(), 5)
+        self.assertEqual(data.parse(), 5)
 
-    def test_format_checkbox(self):
+    def test_parse_checkbox(self):
         field = FieldFactory.create(type=FieldTypes.CHECKBOX)
 
         data = DataFactory.create(field=field, value="true")
-        self.assertEqual(data.format(), True)
+        self.assertEqual(data.parse(), True)
 
         data = DataFactory.create(field=field, value="false")
-        self.assertEqual(data.format(), False)
+        self.assertEqual(data.parse(), False)
 
-    def test_format_date(self):
+    def test_parse_date(self):
         field = FieldFactory.create(type=FieldTypes.DATE)
 
         data = DataFactory.create(field=field, value="2024-07-16")
-        self.assertEqual(data.format(), datetime.date(2024, 7, 16))
+        self.assertEqual(data.parse(), datetime.date(2024, 7, 16))
 
-    def test_format_datetime(self):
+    def test_parse_datetime(self):
         field = FieldFactory.create(type=FieldTypes.DATETIME)
 
         data = DataFactory.create(field=field, value="2024-07-11T12:04:03+02:00")
         tz = pytz.timezone("Europe/Amsterdam")
 
         self.assertEqual(
-            data.format(), tz.localize(datetime.datetime(2024, 7, 11, 12, 4, 3))
+            data.parse(), tz.localize(datetime.datetime(2024, 7, 11, 12, 4, 3))
         )
 
-    def test_format_time(self):
+    def test_parse_time(self):
         field = FieldFactory.create(type=FieldTypes.TIME)
 
         data = DataFactory.create(field=field, value="12:33:01")
-        self.assertEqual(data.format(), datetime.time(12, 33, 1))
+        self.assertEqual(data.parse(), datetime.time(12, 33, 1))
 
-    def test_format_map(self):
+    def test_parse_map(self):
         field = FieldFactory.create(type=FieldTypes.MAP)
 
         data = DataFactory.create(
             field=field, value="52.13309377014838,5.339086446962994"
         )
-        self.assertEqual(data.format(), ["52.13309377014838", "5.339086446962994"])
+        self.assertEqual(data.parse(), ["52.13309377014838", "5.339086446962994"])
 
-    def test_format_select(self):
+    def test_parse_select(self):
         field = FieldFactory.create(type=FieldTypes.SELECT)
 
         data = DataFactory.create(field=field, value="abc,def")
-        self.assertEqual(data.format(), ["abc", "def"])
+        self.assertEqual(data.parse(), ["abc", "def"])
 
     def _subtest_invalid_data_values(self, field: Field, *invalid_values):
         for invalid_value in invalid_values:
@@ -72,7 +72,7 @@ class TestData(TestCase):
 
     def _subtest_valid_data_values(self, field: Field, *valid_values):
         for valid_value in valid_values:
-            with self.subTest(f"{valid_value} should raise not an error"):
+            with self.subTest(f"{valid_value} should not raise an error"):
                 DataFactory.build(field=field, value=valid_value).clean()
 
     def test_clean_bsn_raises_on_invalid_value(self):

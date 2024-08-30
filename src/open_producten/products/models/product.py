@@ -43,10 +43,6 @@ class Product(BasePublishableModel):
         blank=True,
     )
 
-    @property
-    def product_type_name(self):
-        return self.product_type.name
-
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")

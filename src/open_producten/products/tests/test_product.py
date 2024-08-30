@@ -19,10 +19,11 @@ class TestProduct(TestCase):
             "192837465",  # 11 check
         ]
         for value in invalid_values:
-            with self.assertRaises(ValidationError):
-                ProductFactory.build(
-                    bsn=value, product_type=self.product_type
-                ).full_clean()
+            with self.subTest(f"{value} should raise an error"):
+                with self.assertRaises(ValidationError):
+                    ProductFactory.build(
+                        bsn=value, product_type=self.product_type
+                    ).full_clean()
 
     def test_bsn_validation_validates_on_valid_value(self):
         ProductFactory.build(
@@ -36,10 +37,11 @@ class TestProduct(TestCase):
             "test",  # regex
         ]
         for value in invalid_values:
-            with self.assertRaises(ValidationError):
-                ProductFactory.build(
-                    kvk=value, product_type=self.product_type
-                ).full_clean()
+            with self.subTest(f"{value} should raise an error"):
+                with self.assertRaises(ValidationError):
+                    ProductFactory.build(
+                        kvk=value, product_type=self.product_type
+                    ).full_clean()
 
     def test_kvk_validation_validates_on_valid_value(self):
         ProductFactory.build(

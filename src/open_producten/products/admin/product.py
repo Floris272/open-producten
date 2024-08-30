@@ -20,5 +20,9 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("product_type__name",)
     inlines = (DataInline,)
 
+    @admin.display(description="Product Type")
+    def product_type_name(self, obj):
+        return obj.product_type.name
+
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("product_type")
+        return super().get_queryset(request).select_related("product_type")
