@@ -1,0 +1,379 @@
+from django.forms import model_to_dict
+
+from rest_framework.exceptions import ErrorDetail
+
+from open_producten.producttypes.models import Link, ProductType, Tag
+from open_producten.producttypes.tests.factories import (
+    CategoryFactory,
+    ConditionFactory,
+    LinkFactory,
+    ProductTypeFactory,
+    TagFactory,
+    UniformProductNameFactory,
+)
+from open_producten.utils.tests.cases import BaseApiTestCase
+
+
+def product_type_to_dict(product_type):
+    product_type_dict = model_to_dict(product_type) | {"id": str(product_type.id)}
+    product_type_dict["questions"] = [
+        model_to_dict(question) for question in product_type.questions.all()
+    ]
+    product_type_dict["fields"] = [
+        model_to_dict(field) for field in product_type.fields.all()
+    ]
+    product_type_dict["prices"] = [
+        model_to_dict(price) for price in product_type.prices.all()
+    ]
+    product_type_dict["links"] = [
+        model_to_dict(link) for link in product_type.links.all()
+    ]
+    product_type_dict["created_on"] = str(
+        product_type.created_on.astimezone().isoformat()
+    )
+    product_type_dict["updated_on"] = str(
+        product_type.updated_on.astimezone().isoformat()
+    )
+    product_type_dict["uniform_product_name"] = model_to_dict(
+        product_type.uniform_product_name
+    ) | {"id": str(product_type.uniform_product_name.id)}
+
+    return product_type_dict
+
+
+class TestProducttypeViewSet(BaseApiTestCase):
+
+    def setUp(self):
+        upn = UniformProductNameFactory.create()
+
+        self.data = {
+            "name": "test-product-type",
+            "summary": "test",
+            "content": "test test",
+            "uniform_product_name_id": upn.id,
+        }
+
+        self.path = "/api/v1/producttypes/"
+
+    def test_create_minimal_product_type(self):
+        response = self.post(self.data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductType.objects.count(), 1)
+
+    def test_create_product_type_with_related_type(self):
+        product_type = ProductTypeFactory.create()
+
+        data = self.data | {"related_product_types": [product_type.id]}
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductType.objects.count(), 2)
+        self.assertEqual(
+            ProductType.objects.get(id=response.data["id"])
+            .related_product_types.first()
+            .name,
+            product_type.name,
+        )
+
+    def test_create_product_type_with_category(self):
+        category = CategoryFactory.create()
+
+        data = self.data | {"category_ids": [category.id]}
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(
+            ProductType.objects.first().categories.first().name, category.name
+        )
+
+    def test_create_product_type_with_tag(self):
+        tag = TagFactory.create()
+
+        data = self.data | {"tag_ids": [tag.id]}
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(ProductType.objects.first().tags.first().name, tag.name)
+
+    def test_create_product_type_with_condition(self):
+        condition = ConditionFactory.create()
+
+        data = self.data | {"condition_ids": [condition.id]}
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(
+            ProductType.objects.first().conditions.first().name, condition.name
+        )
+
+    def test_create_product_type_with_duplicate_ids_returns_error(self):
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = self.data | {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
+            },
+        )
+
+    def test_update_minimal_product_type(self):
+        product_type = ProductTypeFactory.create()
+
+        response = self.put(product_type.id, self.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProductType.objects.count(), 1)
+
+    def test_update_product_type_with_related_type(self):
+        related_product_type = ProductTypeFactory.create()
+        product_type = ProductTypeFactory.create()
+
+        data = self.data | {"related_product_types": [related_product_type.id]}
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProductType.objects.count(), 2)
+        self.assertEqual(
+            ProductType.objects.get(id=product_type.id)
+            .related_product_types.first()
+            .name,
+            related_product_type.name,
+        )
+
+    def test_update_product_type_with_category(self):
+        product_type = ProductTypeFactory.create()
+        category = CategoryFactory.create()
+
+        data = self.data | {"category_ids": [category.id]}
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(product_type.categories.first().name, category.name)
+
+    def test_update_product_type_with_tag(self):
+        product_type = ProductTypeFactory.create()
+        tag = TagFactory.create()
+
+        data = self.data | {"tag_ids": [tag.id]}
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(product_type.tags.first().name, tag.name)
+
+    def test_update_product_type_with_condition(self):
+        product_type = ProductTypeFactory.create()
+        condition = ConditionFactory.create()
+
+        data = self.data | {"condition_ids": [condition.id]}
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProductType.objects.count(), 1)
+        self.assertEqual(product_type.conditions.first().name, condition.name)
+
+    def test_update_product_type_with_duplicate_ids_returns_error(self):
+        product_type = ProductTypeFactory.create()
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = self.data | {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.put(product_type.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
+            },
+        )
+
+    def test_partial_update_product_type(self):
+        product_type = ProductTypeFactory.create()
+
+        condition = ConditionFactory.create()
+        tag = TagFactory.create()
+
+        product_type.conditions.add(condition)
+        product_type.tags.add(tag)
+        product_type.save()
+
+        data = {"name": "updated"}
+
+        response = self.patch(product_type.id, data)
+        product_type.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(product_type.conditions.count(), 1)
+        self.assertEqual(product_type.tags.count(), 1)
+        self.assertEqual(product_type.name, "updated")
+
+    def test_partial_update_product_type_delete_condition(self):
+        product_type = ProductTypeFactory.create()
+        condition = ConditionFactory.create()
+        product_type.conditions.add(condition)
+        product_type.save()
+
+        data = {"name": "updated", "condition_ids": []}
+
+        response = self.patch(product_type.id, data)
+        product_type.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(product_type.conditions.count(), 0)
+        self.assertEqual(product_type.name, "updated")
+
+    def test_partial_update_product_type_add_condition(self):
+        product_type = ProductTypeFactory.create()
+        condition = ConditionFactory.create()
+
+        data = {"name": "updated", "condition_ids": [condition.id]}
+
+        response = self.patch(product_type.id, data)
+        product_type.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(product_type.conditions.count(), 1)
+
+    def test_partial_update_product_type_with_duplicate_ids_returns_error(self):
+        product_type = ProductTypeFactory.create()
+        tag = TagFactory.create()
+        condition = ConditionFactory.create()
+        category = CategoryFactory.create()
+        related_product_type = ProductTypeFactory.create()
+
+        data = {
+            "category_ids": [category.id, category.id],
+            "condition_ids": [condition.id, condition.id],
+            "tag_ids": [tag.id, tag.id],
+            "related_product_types": [related_product_type.id, related_product_type.id],
+        }
+
+        response = self.patch(product_type.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
+            },
+        )
+
+    def test_read_product_types(self):
+        product_type = ProductTypeFactory.create()
+
+        response = self.get()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [product_type_to_dict(product_type)])
+
+    def test_read_product_type(self):
+        product_type = ProductTypeFactory.create()
+
+        response = self.get(product_type.id)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, product_type_to_dict(product_type))
+
+    def test_delete_product_type(self):
+        tag = TagFactory.create()
+        product_type = ProductTypeFactory.create()
+        product_type.tags.add(tag)
+        product_type.save()
+        LinkFactory.create(product_type=product_type)
+
+        response = self.delete(product_type.id)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(ProductType.objects.count(), 0)
+        self.assertEqual(Tag.objects.count(), 1)
+        self.assertEqual(Link.objects.count(), 0)

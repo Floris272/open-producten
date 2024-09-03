@@ -5,7 +5,7 @@ from django.test import TestCase
 from open_producten.products.models import Product
 from open_producten.producttypes.models import FieldTypes
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
-from open_producten.utils.tests.test_helpers import build_formset_data
+from open_producten.utils.tests.helpers import build_formset_data
 
 from ..admin.data import DataInlineFormSet
 from ..models import Data

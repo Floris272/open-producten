@@ -5,7 +5,7 @@ from ..models import Category
 from .factories import CategoryFactory, UniformProductNameFactory
 
 
-class TestProductTypeAdinForm(TestCase):
+class TestProductTypeAdminForm(TestCase):
     def setUp(self):
         upn = UniformProductNameFactory.create()
         self.data = {

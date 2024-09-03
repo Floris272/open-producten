@@ -1,0 +1,2514 @@
+openapi: 3.0.3
+info:
+  title: Open Producten API
+  version: 0.0.1
+  description: |2
+
+    Open Producten is an API to manage product types and products.
+paths:
+  /api/v1/categories/:
+    get:
+      operationId: categories_list
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          description: ''
+    post:
+      operationId: categories_create
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/categories/{category_id}/questions/:
+    get:
+      operationId: categories_questions_list
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+          description: ''
+    post:
+      operationId: categories_questions_create
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+  /api/v1/categories/{category_id}/questions/{question_id}/:
+    get:
+      operationId: categories_questions_retrieve
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    put:
+      operationId: categories_questions_update
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    patch:
+      operationId: categories_questions_partial_update
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    delete:
+      operationId: categories_questions_destroy
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/categories/{id}/:
+    get:
+      operationId: categories_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Category.
+          required: true
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    put:
+      operationId: categories_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Category.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: categories_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Category.
+          required: true
+      tags:
+        - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    delete:
+      operationId: categories_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Category.
+          required: true
+      tags:
+        - categories
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/conditions/:
+    get:
+      operationId: conditions_list
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Condition'
+          description: ''
+    post:
+      operationId: conditions_create
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+  /api/v1/conditions/{id}/:
+    get:
+      operationId: conditions_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    put:
+      operationId: conditions_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    patch:
+      operationId: conditions_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCondition'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+          description: ''
+    delete:
+      operationId: conditions_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Condition.
+          required: true
+      tags:
+        - conditions
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/producttypes/:
+    get:
+      operationId: producttypes_list
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductType'
+          description: ''
+    post:
+      operationId: producttypes_create
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductType'
+          description: ''
+  /api/v1/producttypes/{id}/:
+    get:
+      operationId: producttypes_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type.
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductType'
+          description: ''
+    put:
+      operationId: producttypes_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductType'
+          description: ''
+    patch:
+      operationId: producttypes_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductType'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductType'
+          description: ''
+    delete:
+      operationId: producttypes_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type.
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/producttypes/{product_type_id}/fields/:
+    get:
+      operationId: producttypes_fields_list
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Field'
+          description: ''
+    post:
+      operationId: producttypes_fields_create
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Field'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Field'
+          description: ''
+  /api/v1/producttypes/{product_type_id}/fields/{field_id}/:
+    get:
+      operationId: producttypes_fields_retrieve
+      parameters:
+        - in: path
+          name: field_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Field.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Field'
+          description: ''
+    put:
+      operationId: producttypes_fields_update
+      parameters:
+        - in: path
+          name: field_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Field.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Field'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Field'
+          description: ''
+    patch:
+      operationId: producttypes_fields_partial_update
+      parameters:
+        - in: path
+          name: field_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Field.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedField'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Field'
+          description: ''
+    delete:
+      operationId: producttypes_fields_destroy
+      parameters:
+        - in: path
+          name: field_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Field.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this field is part of
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/producttypes/{product_type_id}/links/:
+    get:
+      operationId: producttypes_links_list
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+          description: ''
+    post:
+      operationId: producttypes_links_create
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Link'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+          description: ''
+  /api/v1/producttypes/{product_type_id}/links/{link_id}/:
+    get:
+      operationId: producttypes_links_retrieve
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type link.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+          description: ''
+    put:
+      operationId: producttypes_links_update
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type link.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Link'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+          description: ''
+    patch:
+      operationId: producttypes_links_partial_update
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type link.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLink'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+          description: ''
+    delete:
+      operationId: producttypes_links_destroy
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Product type link.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: Related product type
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/producttypes/{product_type_id}/prices/:
+    get:
+      operationId: producttypes_prices_list
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Price'
+          description: ''
+    post:
+      operationId: producttypes_prices_create
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Price'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+          description: ''
+  /api/v1/producttypes/{product_type_id}/prices/{price_id}/:
+    get:
+      operationId: producttypes_prices_retrieve
+      parameters:
+        - in: path
+          name: price_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Price.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+          description: ''
+    put:
+      operationId: producttypes_prices_update
+      parameters:
+        - in: path
+          name: price_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Price.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Price'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+          description: ''
+    patch:
+      operationId: producttypes_prices_partial_update
+      parameters:
+        - in: path
+          name: price_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Price.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPrice'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+          description: ''
+    delete:
+      operationId: producttypes_prices_destroy
+      parameters:
+        - in: path
+          name: price_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Price.
+          required: true
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+            description: The product type that this price belongs to
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/producttypes/{product_type_id}/questions/:
+    get:
+      operationId: producttypes_questions_list
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+          description: ''
+    post:
+      operationId: producttypes_questions_create
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+  /api/v1/producttypes/{product_type_id}/questions/{question_id}/:
+    get:
+      operationId: producttypes_questions_retrieve
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    put:
+      operationId: producttypes_questions_update
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    patch:
+      operationId: producttypes_questions_partial_update
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - producttypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestion'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+          description: ''
+    delete:
+      operationId: producttypes_questions_destroy
+      parameters:
+        - in: path
+          name: product_type_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Question.
+          required: true
+      tags:
+        - producttypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/tags/:
+    get:
+      operationId: tags_list
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+          description: ''
+    post:
+      operationId: tags_create
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+  /api/v1/tags/{id}/:
+    get:
+      operationId: tags_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    put:
+      operationId: tags_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    patch:
+      operationId: tags_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTag'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: ''
+    delete:
+      operationId: tags_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag.
+          required: true
+      tags:
+        - tags
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+  /api/v1/tagtypes/:
+    get:
+      operationId: tagtypes_list
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagType'
+          description: ''
+    post:
+      operationId: tagtypes_create
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+  /api/v1/tagtypes/{id}/:
+    get:
+      operationId: tagtypes_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    put:
+      operationId: tagtypes_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagType'
+        required: true
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    patch:
+      operationId: tagtypes_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTagType'
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagType'
+          description: ''
+    delete:
+      operationId: tagtypes_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          description: A UUID string identifying this Tag type.
+          required: true
+      tags:
+        - tagtypes
+      security:
+        - cookieAuth: [ ]
+        - basicAuth: [ ]
+        - { }
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        parent_category:
+          type: string
+          format: uuid
+          writeOnly: true
+          nullable: true
+        product_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleProductType'
+          readOnly: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        product_type_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the category
+          maxLength: 100
+        description:
+          type: string
+          description: Description of the category
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the category
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Image of the category
+      required:
+        - created_on
+        - id
+        - name
+        - parent_category
+        - product_types
+        - questions
+        - updated_on
+    Condition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Short name of the condition
+          maxLength: 100
+        question:
+          type: string
+          description: Question used in the question-answer game
+        positive_text:
+          type: string
+          description: Description how to meet the condition
+        negative_text:
+          type: string
+          description: Description how not to meet the condition
+      required:
+        - id
+        - name
+        - negative_text
+        - positive_text
+        - question
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: The name of the field
+          maxLength: 255
+        description:
+          type: string
+          description: Short description of the field
+          maxLength: 300
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TypeEnum'
+          description: |-
+            The formio type of the field
+
+            * `bsn` - Bsn
+            * `checkbox` - Checkbox
+            * `Cosign` - Cosign
+            * `currency` - Currency
+            * `date` - Date
+            * `datetime` - Datetime
+            * `email` - Email
+            * `file` - File
+            * `iban` - Iban
+            * `licenseplate` - License Plate
+            * `map` - Map
+            * `number` - Number
+            * `password` - Password
+            * `phoneNumber` - Phone Number
+            * `postcode` - Postcode
+            * `radio` - Radio
+            * `select` - Select
+            * `selectBoxes` - Select Boxes
+            * `signature` - Signature
+            * `textfield` - Textfield
+            * `time` - Time
+        is_required:
+          type: boolean
+        choices:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          nullable: true
+          description: The Choices that can be selected in the form
+      required:
+        - description
+        - id
+        - name
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name for the link
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          description: Url of the link
+          maxLength: 200
+      required:
+        - id
+        - name
+        - url
+    PatchedCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        parent_category:
+          type: string
+          format: uuid
+          writeOnly: true
+          nullable: true
+        product_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleProductType'
+          readOnly: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        product_type_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the category
+          maxLength: 100
+        description:
+          type: string
+          description: Description of the category
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the category
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Image of the category
+    PatchedCondition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Short name of the condition
+          maxLength: 100
+        question:
+          type: string
+          description: Question used in the question-answer game
+        positive_text:
+          type: string
+          description: Description how to meet the condition
+        negative_text:
+          type: string
+          description: Description how not to meet the condition
+    PatchedField:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: The name of the field
+          maxLength: 255
+        description:
+          type: string
+          description: Short description of the field
+          maxLength: 300
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TypeEnum'
+          description: |-
+            The formio type of the field
+
+            * `bsn` - Bsn
+            * `checkbox` - Checkbox
+            * `Cosign` - Cosign
+            * `currency` - Currency
+            * `date` - Date
+            * `datetime` - Datetime
+            * `email` - Email
+            * `file` - File
+            * `iban` - Iban
+            * `licenseplate` - License Plate
+            * `map` - Map
+            * `number` - Number
+            * `password` - Password
+            * `phoneNumber` - Phone Number
+            * `postcode` - Postcode
+            * `radio` - Radio
+            * `select` - Select
+            * `selectBoxes` - Select Boxes
+            * `signature` - Signature
+            * `textfield` - Textfield
+            * `time` - Time
+        is_required:
+          type: boolean
+        choices:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          nullable: true
+          description: The Choices that can be selected in the form
+    PatchedLink:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name for the link
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          description: Url of the link
+          maxLength: 200
+    PatchedPrice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceOption'
+          default: [ ]
+        valid_from:
+          type: string
+          format: date
+          title: Start date
+          description: The date at which this price is valid
+    PatchedProductType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          readOnly: true
+        tag_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        related_product_types:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: [ ]
+        uniform_product_name_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        uniform_product_name:
+          allOf:
+            - $ref: '#/components/schemas/UniformProductName'
+          readOnly: true
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          readOnly: true
+        condition_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleCategory'
+          readOnly: true
+        category_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+          readOnly: true
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          readOnly: true
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the product type
+          maxLength: 100
+        summary:
+          type: string
+          description: Short description of the product type, limited to 300 characters.
+          maxLength: 300
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the product type
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Main image of the product type
+        form_link:
+          type: string
+          format: uri
+          description: Action link to request the product type.
+          maxLength: 200
+        content:
+          type: string
+          description: Product type content with build-in WYSIWYG editor.
+        keywords:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          description: List of keywords for search
+    PatchedQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        question:
+          type: string
+          maxLength: 250
+        answer:
+          type: string
+    PatchedTag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TagType'
+          readOnly: true
+        type_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        name:
+          type: string
+          description: Name of the tag
+          maxLength: 100
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the tag
+    PatchedTagType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name of the tag type
+          maxLength: 100
+    Price:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceOption'
+          default: [ ]
+        valid_from:
+          type: string
+          format: date
+          title: Start date
+          description: The date at which this price is valid
+      required:
+        - id
+        - valid_from
+    PriceOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          title: Price
+          description: The amount of the price option
+        description:
+          type: string
+          description: Short description of the option
+          maxLength: 100
+      required:
+        - amount
+        - description
+    ProductType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          readOnly: true
+        tag_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        related_product_types:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: [ ]
+        uniform_product_name_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        uniform_product_name:
+          allOf:
+            - $ref: '#/components/schemas/UniformProductName'
+          readOnly: true
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          readOnly: true
+        condition_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleCategory'
+          readOnly: true
+        category_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          writeOnly: true
+          default: [ ]
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+          readOnly: true
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+          readOnly: true
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          readOnly: true
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the product type
+          maxLength: 100
+        summary:
+          type: string
+          description: Short description of the product type, limited to 300 characters.
+          maxLength: 300
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the product type
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Main image of the product type
+        form_link:
+          type: string
+          format: uri
+          description: Action link to request the product type.
+          maxLength: 200
+        content:
+          type: string
+          description: Product type content with build-in WYSIWYG editor.
+        keywords:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          description: List of keywords for search
+      required:
+        - categories
+        - conditions
+        - content
+        - created_on
+        - fields
+        - id
+        - links
+        - name
+        - prices
+        - questions
+        - tags
+        - uniform_product_name
+        - uniform_product_name_id
+        - updated_on
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        question:
+          type: string
+          maxLength: 250
+        answer:
+          type: string
+      required:
+        - answer
+        - id
+        - question
+    SimpleCategory:
+      type: object
+      properties:
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the category
+          maxLength: 100
+        description:
+          type: string
+          description: Description of the category
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the category
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Image of the category
+      required:
+        - created_on
+        - name
+        - updated_on
+    SimpleProductType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        uniform_product_name:
+          $ref: '#/components/schemas/UniformProductName'
+        published:
+          type: boolean
+          description: Whether the object is accessible through the API.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was created.
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime at which the object was last changed.
+        name:
+          type: string
+          description: Name of the product type
+          maxLength: 100
+        summary:
+          type: string
+          description: Short description of the product type, limited to 300 characters.
+          maxLength: 300
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the product type
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: Main image of the product type
+        form_link:
+          type: string
+          format: uri
+          description: Action link to request the product type.
+          maxLength: 200
+        content:
+          type: string
+          description: Product type content with build-in WYSIWYG editor.
+        keywords:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+          description: List of keywords for search
+      required:
+        - content
+        - created_on
+        - id
+        - name
+        - uniform_product_name
+        - updated_on
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          allOf:
+            - $ref: '#/components/schemas/TagType'
+          readOnly: true
+        type_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        name:
+          type: string
+          description: Name of the tag
+          maxLength: 100
+        icon:
+          type: string
+          format: uri
+          nullable: true
+          description: Icon of the tag
+      required:
+        - id
+        - name
+        - type
+        - type_id
+    TagType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name of the tag type
+          maxLength: 100
+      required:
+        - id
+        - name
+    TypeEnum:
+      enum:
+        - bsn
+        - checkbox
+        - Cosign
+        - currency
+        - date
+        - datetime
+        - email
+        - file
+        - iban
+        - licenseplate
+        - map
+        - number
+        - password
+        - phoneNumber
+        - postcode
+        - radio
+        - select
+        - selectBoxes
+        - signature
+        - textfield
+        - time
+      type: string
+      description: |-
+        * `bsn` - Bsn
+        * `checkbox` - Checkbox
+        * `Cosign` - Cosign
+        * `currency` - Currency
+        * `date` - Date
+        * `datetime` - Datetime
+        * `email` - Email
+        * `file` - File
+        * `iban` - Iban
+        * `licenseplate` - License Plate
+        * `map` - Map
+        * `number` - Number
+        * `password` - Password
+        * `phoneNumber` - Phone Number
+        * `postcode` - Postcode
+        * `radio` - Radio
+        * `select` - Select
+        * `selectBoxes` - Select Boxes
+        * `signature` - Signature
+        * `textfield` - Textfield
+        * `time` - Time
+    UniformProductName:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Uniform product name
+          maxLength: 100
+        url:
+          type: string
+          format: uri
+          description: Url to the upn definition.
+          maxLength: 200
+      required:
+        - id
+        - name
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: open_producten_sessionid
