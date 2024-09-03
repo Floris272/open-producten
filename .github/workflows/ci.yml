@@ -155,7 +155,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v3
   #     - name: Download generated OAS
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4.1.7
   #       with:
   #         name: open_producten-oas
   #     - name: Check for OAS changes
@@ -177,7 +177,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v3
   #     - name: Download generated OAS
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4.1.7
   #       with:
   #         name: open_producten-oas
   #     - name: Use Node.js
@@ -196,7 +196,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v3
   #     - name: Download generated OAS
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4.1.7
   #       with:
   #         name: open_producten-oas
   #     - name: Use Node.js
@@ -217,7 +217,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v3
   #     - name: Download generated OAS
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4.1.7
   #       with:
   #         name: open_producten-oas
   #     - name: Use Node.js
@@ -270,7 +270,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Download built image
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: docker-image
 
