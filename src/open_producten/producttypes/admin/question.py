@@ -17,8 +17,11 @@ class QuestionAdmin(OrderedModelAdmin):
         "question",
         "answer",
         "category__name",
-        "product__name",
+        "product_type__name",
     )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("category", "product_type")
 
 
 class QuestionInline(admin.TabularInline):

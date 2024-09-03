@@ -13,10 +13,12 @@ INSTALLED_APPS += [
     # 'django.contrib.sitemaps',
     # External applications.
     # Project applications.
+    "localflavor",
     "treebeard",
     "open_producten.accounts",
     "open_producten.utils",
     "open_producten.producttypes",
+    "open_producten.products",
 ]
 
 #

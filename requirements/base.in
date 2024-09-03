@@ -9,3 +9,5 @@ django-treebeard
 # API libraries
 # django-extra-fields
 
+
+django-localflavor

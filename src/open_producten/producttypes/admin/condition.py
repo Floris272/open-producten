@@ -16,3 +16,6 @@ class ConditionAdmin(admin.ModelAdmin):
     @admin.display(description="Product types")
     def display_product_types(self, obj):
         return ", ".join(p.name for p in obj.product_types.all())
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("product_type")
