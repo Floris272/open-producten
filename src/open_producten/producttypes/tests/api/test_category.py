@@ -73,10 +73,12 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "product_type_ids": ErrorDetail(
-                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
-                    code="invalid",
-                )
+                "product_type_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ]
             },
         )
 
@@ -131,10 +133,12 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "product_type_ids": ErrorDetail(
-                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
-                    code="invalid",
-                )
+                "product_type_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ]
             },
         )
 
@@ -190,10 +194,12 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "product_type_ids": ErrorDetail(
-                    string=f"Duplicate ProductType id: {product_type.id} at index 1",
-                    code="invalid",
-                )
+                "product_type_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ]
             },
         )
 

@@ -129,21 +129,29 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "category_ids": ErrorDetail(
-                    string=f"Duplicate Category id: {category.id} at index 1",
-                    code="invalid",
-                ),
-                "condition_ids": ErrorDetail(
-                    string=f"Duplicate Condition id: {condition.id} at index 1",
-                    code="invalid",
-                ),
-                "related_product_types": ErrorDetail(
-                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
-                    code="invalid",
-                ),
-                "tag_ids": ErrorDetail(
-                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
-                ),
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
             },
         )
 
@@ -224,21 +232,29 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "category_ids": ErrorDetail(
-                    string=f"Duplicate Category id: {category.id} at index 1",
-                    code="invalid",
-                ),
-                "condition_ids": ErrorDetail(
-                    string=f"Duplicate Condition id: {condition.id} at index 1",
-                    code="invalid",
-                ),
-                "related_product_types": ErrorDetail(
-                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
-                    code="invalid",
-                ),
-                "tag_ids": ErrorDetail(
-                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
-                ),
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
             },
         )
 
@@ -306,21 +322,29 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(
             response.data,
             {
-                "category_ids": ErrorDetail(
-                    string=f"Duplicate Category id: {category.id} at index 1",
-                    code="invalid",
-                ),
-                "condition_ids": ErrorDetail(
-                    string=f"Duplicate Condition id: {condition.id} at index 1",
-                    code="invalid",
-                ),
-                "related_product_types": ErrorDetail(
-                    string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
-                    code="invalid",
-                ),
-                "tag_ids": ErrorDetail(
-                    string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
-                ),
+                "category_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Category id: {category.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "condition_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Condition id: {condition.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "related_product_types": [
+                    ErrorDetail(
+                        string=f"Duplicate ProductType id: {related_product_type.id} at index 1",
+                        code="invalid",
+                    )
+                ],
+                "tag_ids": [
+                    ErrorDetail(
+                        string=f"Duplicate Tag id: {tag.id} at index 1", code="invalid"
+                    )
+                ],
             },
         )
 

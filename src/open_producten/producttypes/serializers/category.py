@@ -3,7 +3,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from open_producten.producttypes.models import Category, ProductType
-from open_producten.utils.serializers import check_for_duplicates_in_array
+from open_producten.utils.serializers import build_array_duplicates_error_message
 
 from .children import QuestionSerializer, UniformProductNameSerializer
 
@@ -40,7 +40,9 @@ class CategorySerializer(serializers.ModelSerializer):
     def _handle_relations(self, instance, product_types):
         errors = dict()
         if product_types is not None:
-            check_for_duplicates_in_array(product_types, "product_type_ids", errors)
+            build_array_duplicates_error_message(
+                product_types, "product_type_ids", errors
+            )
             instance.product_types.set(product_types)
 
         if errors:

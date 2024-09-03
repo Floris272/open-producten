@@ -2,7 +2,7 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from open_producten.utils.serializers import check_for_duplicates_in_array
+from open_producten.utils.serializers import build_array_duplicates_error_message
 
 from ..models import Category, Condition, ProductType, Tag, UniformProductName
 from .children import (
@@ -76,18 +76,18 @@ class ProductTypeSerializer(serializers.ModelSerializer):
     ):
         errors = dict()
         if related_product_types is not None:
-            check_for_duplicates_in_array(
+            build_array_duplicates_error_message(
                 related_product_types, "related_product_types", errors
             )
             instance.related_product_types.set(related_product_types)
         if categories is not None:
-            check_for_duplicates_in_array(categories, "category_ids", errors)
+            build_array_duplicates_error_message(categories, "category_ids", errors)
             instance.categories.set(categories)
         if tags is not None:
-            check_for_duplicates_in_array(tags, "tag_ids", errors)
+            build_array_duplicates_error_message(tags, "tag_ids", errors)
             instance.tags.set(tags)
         if conditions is not None:
-            check_for_duplicates_in_array(conditions, "condition_ids", errors)
+            build_array_duplicates_error_message(conditions, "condition_ids", errors)
             instance.conditions.set(conditions)
 
         if errors:
