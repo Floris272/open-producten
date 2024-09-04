@@ -23,12 +23,6 @@ INSTALLED_APPS += [
 ]
 
 #
-# FIXTURES
-#
-
-FIXTURE_DIRS = (DJANGO_PROJECT_DIR / "fixtures",)
-
-#
 # Custom settings
 #
 PROJECT_NAME = "open_producten"
