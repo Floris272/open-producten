@@ -67,7 +67,7 @@ celery==5.4.0
     #   flower
     #   notifications-api-common
     #   open-api-framework
-certifi==2024.7.4
+certifi==2024.8.30
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
@@ -125,7 +125,7 @@ coreschema==0.0.4
     #   coreapi
 coverage==4.5.4
     # via -r requirements/test-tools.in
-cryptography==42.0.8
+cryptography==43.0.1
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
