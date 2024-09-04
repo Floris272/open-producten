@@ -45,12 +45,14 @@ class TestProducttypeViewSet(BaseApiTestCase):
 
     def setUp(self):
         upn = UniformProductNameFactory.create()
+        category = CategoryFactory()
 
         self.data = {
             "name": "test-product-type",
             "summary": "test",
             "content": "test test",
             "uniform_product_name_id": upn.id,
+            "category_ids": [category.id],
         }
 
         self.path = "/api/v1/producttypes/"
@@ -60,6 +62,13 @@ class TestProducttypeViewSet(BaseApiTestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(ProductType.objects.count(), 1)
+
+    def test_create_product_type_without_fields_returns_error(self):
+        data = self.data.copy()
+        data["category_ids"] = []
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 400)
 
     def test_create_product_type_with_related_type(self):
         product_type = ProductTypeFactory.create()

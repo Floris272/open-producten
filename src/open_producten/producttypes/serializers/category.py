@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from rest_framework import serializers
@@ -20,7 +21,6 @@ class CategorySerializer(serializers.ModelSerializer):
     parent_category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         allow_null=True,
-        write_only=True,
     )
     product_types = SimpleProductTypeSerializer(many=True, read_only=True)
     questions = QuestionSerializer(many=True, read_only=True)
@@ -48,6 +48,12 @@ class CategorySerializer(serializers.ModelSerializer):
         if errors:
             raise serializers.ValidationError(errors)
 
+    def _clean(self, category):
+        try:
+            category.clean()
+        except ValidationError as err:
+            raise serializers.ValidationError({"parent_category": err.message})
+
     @transaction.atomic()
     def create(self, validated_data):
         product_types = validated_data.pop("product_types")
@@ -58,6 +64,7 @@ class CategorySerializer(serializers.ModelSerializer):
         else:
             category = Category.add_root(**validated_data)
 
+        self._clean(category)
         self._handle_relations(category, product_types)
         category.save()
 
@@ -82,6 +89,7 @@ class CategorySerializer(serializers.ModelSerializer):
             instance.refresh_from_db()
 
         instance = super().update(instance, validated_data)
+        self._clean(instance)
         self._handle_relations(instance, product_types)
         instance.save()
         return instance

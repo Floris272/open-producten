@@ -21,26 +21,6 @@ class CategoryAdminForm(movenodeform_factory(Category)):
         model = Category
         fields = "__all__"
 
-    def clean(self, *args, **kwargs):
-        cleaned_data = super().clean(*args, **kwargs)
-
-        published = cleaned_data["published"]
-        ref_node = cleaned_data["_ref_node_id"]
-        if published and ref_node:
-            parent_node = Category.objects.get(id=ref_node)
-            if not parent_node.published:
-                raise forms.ValidationError(
-                    _("Parent nodes have to be published in order to publish a child.")
-                )
-
-        if (
-            not published
-            and self.instance.get_children().filter(published=True).exists()
-        ):
-            raise forms.ValidationError(
-                _("Parent nodes cannot be unpublished if they have published children.")
-            )
-
 
 class CategoryAdminFormSet(BaseModelFormSet):
     def clean(self):

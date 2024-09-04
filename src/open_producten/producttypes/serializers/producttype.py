@@ -58,7 +58,6 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         many=True,
         write_only=True,
         queryset=Category.objects.all(),
-        default=[],
         source="categories",
     )
 
@@ -70,6 +69,11 @@ class ProductTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductType
         fields = "__all__"
+
+    def validate_category_ids(self, attrs):
+        if len(attrs) == 0:
+            raise serializers.ValidationError("At least one category is required")
+        return attrs
 
     def _handle_relations(
         self, instance, related_product_types, categories, tags, conditions

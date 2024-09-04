@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -48,5 +49,21 @@ class Category(MP_Node, BasePublishableModel):
     def __str__(self):
         return self.name
 
+    @property
+    def parent_category(self):
+        return self.get_parent()
+
     def move(self, target, pos=None):
         return PublishedMoveHandler(self, target, pos).process()
+
+    def clean(self):
+        if self.published and self.parent_category:
+            if not self.parent_category.published:
+                raise ValidationError(
+                    _("Parent nodes have to be published in order to publish a child.")
+                )
+
+        if not self.published and self.get_children().filter(published=True).exists():
+            raise ValidationError(
+                _("Parent nodes cannot be unpublished if they have published children.")
+            )

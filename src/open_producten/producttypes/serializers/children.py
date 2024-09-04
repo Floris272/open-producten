@@ -96,6 +96,11 @@ class FieldSerializer(serializers.ModelSerializer):
         model = Field
         exclude = ("product_type",)
 
+    def validate(self, attrs):
+        instance = Field(**attrs)
+        instance.clean()
+        return attrs
+
 
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
