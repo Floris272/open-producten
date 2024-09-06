@@ -61,6 +61,7 @@ def product_type_to_dict(product_type):
 class TestProducttypeViewSet(BaseApiTestCase):
 
     def setUp(self):
+        super().setUp()
         upn = UniformProductNameFactory.create()
         category = CategoryFactory()
 
@@ -73,6 +74,11 @@ class TestProducttypeViewSet(BaseApiTestCase):
         }
 
         self.path = "/api/v1/producttypes/"
+
+    def test_read_product_type_without_credentials_returns_error(self):
+        self.client._credentials = {}
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 401)
 
     def test_create_minimal_product_type(self):
         response = self.post(self.data)

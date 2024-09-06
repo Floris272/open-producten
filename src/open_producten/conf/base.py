@@ -13,6 +13,7 @@ INSTALLED_APPS += [
     # 'django.contrib.sitemaps',
     # External applications.
     # Project applications.
+    "rest_framework.authtoken",
     "localflavor",
     "treebeard",
     "open_producten.accounts",
@@ -56,8 +57,13 @@ ADMIN_INDEX_SHOW_REMAINING_APPS = False
 #
 # Django rest framework
 #
-
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",

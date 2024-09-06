@@ -14,12 +14,18 @@ def tag_to_dict(tag):
 class TestProductTypeTag(BaseApiTestCase):
 
     def setUp(self):
+        super().setUp()
         self.tag_type = TagTypeFactory()
         self.data = {"name": "test tag", "type_id": self.tag_type.id}
         self.path = "/api/v1/tags/"
 
-    def create_tag(self):
+    def _create_tag(self):
         return TagFactory.create()
+
+    def test_read_tag_without_credentials_returns_error(self):
+        self.client._credentials = {}
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 401)
 
     def test_create_tag(self):
         response = self.post(self.data)
@@ -29,7 +35,7 @@ class TestProductTypeTag(BaseApiTestCase):
         self.assertEqual(Tag.objects.first().name, "test tag")
 
     def test_update_tag(self):
-        tag = self.create_tag()
+        tag = self._create_tag()
 
         data = self.data | {"name": "updated"}
         response = self.put(tag.id, data)
@@ -39,7 +45,7 @@ class TestProductTypeTag(BaseApiTestCase):
         self.assertEqual(Tag.objects.first().name, "updated")
 
     def test_partial_update_tag(self):
-        tag = self.create_tag()
+        tag = self._create_tag()
 
         data = {"name": "updated"}
         response = self.patch(tag.id, data)
@@ -49,7 +55,7 @@ class TestProductTypeTag(BaseApiTestCase):
         self.assertEqual(Tag.objects.first().name, "updated")
 
     def test_read_tags(self):
-        tag = self.create_tag()
+        tag = self._create_tag()
 
         response = self.get()
 
@@ -57,7 +63,7 @@ class TestProductTypeTag(BaseApiTestCase):
         self.assertEqual(response.data, [tag_to_dict(tag)])
 
     def test_read_tag(self):
-        tag = self.create_tag()
+        tag = self._create_tag()
 
         response = self.get(tag.id)
 
@@ -65,7 +71,7 @@ class TestProductTypeTag(BaseApiTestCase):
         self.assertEqual(response.data, tag_to_dict(tag))
 
     def test_delete_tag(self):
-        tag = self.create_tag()
+        tag = self._create_tag()
         response = self.delete(tag.id)
 
         self.assertEqual(response.status_code, 204)

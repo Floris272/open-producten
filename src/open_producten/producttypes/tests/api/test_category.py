@@ -35,11 +35,17 @@ def category_to_dict(category):
 class TestCategoryViewSet(BaseApiTestCase):
 
     def setUp(self):
+        super().setUp()
         self.data = {
             "name": "test-category",
             "parent_category": None,
         }
         self.path = "/api/v1/categories/"
+
+    def test_read_category_without_credentials_returns_error(self):
+        self.client._credentials = {}
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 401)
 
     def test_create_minimal_category(self):
         response = self.post(self.data)
