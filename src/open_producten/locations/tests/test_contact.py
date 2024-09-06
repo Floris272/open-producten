@@ -21,14 +21,6 @@ class ContactTestCase(TestCase):
 
         self.assertEqual(str(self.contact), "Bob de Vries")
 
-    def test_get_mailto_link(self):
-        self.assertEqual(self.contact.get_mailto_link(), "mailto://org@gmail.com")
-
-        self.contact.email = "loc@gmail.com"
-        self.contact.save()
-
-        self.assertEqual(self.contact.get_mailto_link(), "mailto://loc@gmail.com")
-
     def test_get_email(self):
         self.assertEqual(self.contact.get_email(), "org@gmail.com")
 

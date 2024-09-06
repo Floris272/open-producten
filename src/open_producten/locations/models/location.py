@@ -44,17 +44,9 @@ class BaseLocation(BaseModel):
         abstract = True
 
     @property
-    def address_str(self):
-        return f"{self.address_line_1}, {self.address_line_2}"
-
-    @property
-    def address_line_1(self):
-        return f"{self.street} {self.house_number}"
-
-    @property
-    def address_line_2(self):
+    def address(self) -> str:
         postcode = self.postcode.replace(" ", "")
-        return f"{postcode} {self.city}"
+        return f"{self.street} {self.house_number}, {postcode} {self.city}"
 
 
 class Location(BaseLocation):
@@ -63,4 +55,4 @@ class Location(BaseLocation):
         verbose_name_plural = _("Locations")
 
     def __str__(self) -> str:
-        return f"{self.name}: {self.address_str}"
+        return f"{self.name}: {self.address}"

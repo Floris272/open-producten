@@ -6,18 +6,15 @@ from ..models import Neighbourhood, Organisation, OrganisationType
 
 @admin.register(Organisation)
 class OrganisationAdmin(admin.ModelAdmin):
-    # List
     list_display = ("name", "type")
     list_filter = ("type__name", "city")
     search_fields = ("name",)
     ordering = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
 
-    # Detail
     fieldsets = (
         (
             None,
-            {"fields": ("published", "name", "slug", "type", "logo", "neighbourhood")},
+            {"fields": ("name", "type", "logo", "neighbourhood")},
         ),
         (_("Contact"), {"fields": ("email", "phone_number")}),
         (
@@ -25,6 +22,9 @@ class OrganisationAdmin(admin.ModelAdmin):
             {"fields": ("street", "house_number", "postcode", "city")},
         ),
     )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("neighbourhood", "type")
 
 
 @admin.register(OrganisationType)

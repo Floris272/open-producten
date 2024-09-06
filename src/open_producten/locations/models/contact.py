@@ -55,12 +55,6 @@ class Contact(BaseModel):
             return f"{self.organisation.name}: {self.first_name} {self.last_name}"
         return f"{self.first_name} {self.last_name}"
 
-    def get_mailto_link(self):
-        email = self.get_email()
-        if not email:
-            return
-        return f"mailto://{email}"
-
     def get_email(self):
         if self.email:
             return self.email

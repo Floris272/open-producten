@@ -38,12 +38,6 @@ class Neighbourhood(BaseModel):
 
 
 class Organisation(BaseLocation):
-    slug = models.SlugField(
-        verbose_name=_("Slug"),
-        max_length=100,
-        unique=True,
-        help_text=_("Slug of the organisation"),
-    )
     logo = models.ImageField(
         verbose_name=_("Logo"),
         null=True,

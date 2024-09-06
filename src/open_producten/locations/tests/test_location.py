@@ -13,7 +13,5 @@ class TestLocation(TestCase):
             city="Amsterdam",
         )
 
-    def test_address_str(self):
-        self.assertEqual(
-            self.location.address_str, "Keizersgracht 117, 1015CJ Amsterdam"
-        )
+    def test_address(self):
+        self.assertEqual(self.location.address, "Keizersgracht 117, 1015CJ Amsterdam")

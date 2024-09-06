@@ -19,7 +19,6 @@ class NeighbourhoodFactory(factory.django.DjangoModelFactory):
 
 class OrganisationFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"organisation {n}")
-    slug = factory.Faker("slug")
     type = factory.SubFactory(OrganisationTypeFactory)
     neighbourhood = factory.SubFactory(NeighbourhoodFactory)
 

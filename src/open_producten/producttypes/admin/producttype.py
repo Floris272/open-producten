@@ -50,9 +50,13 @@ class ProductTypeAdmin(admin.ModelAdmin):
     inlines = (FileInline, LinkInline, QuestionInline, FieldInline)
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
-
-        return qs.prefetch_related("tags", "categories")
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related(
+                "tags", "categories", "contacts", "locations", "organisations"
+            )
+        )
 
     @admin.display(description="categories")
     def display_categories(self, obj):
