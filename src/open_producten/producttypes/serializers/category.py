@@ -48,7 +48,7 @@ class CategorySerializer(serializers.ModelSerializer):
         if errors:
             raise serializers.ValidationError(errors)
 
-    def _clean(self, category):
+    def _validate_category(self, category):
         try:
             category.clean()
         except ValidationError as err:
@@ -64,7 +64,7 @@ class CategorySerializer(serializers.ModelSerializer):
         else:
             category = Category.add_root(**validated_data)
 
-        self._clean(category)
+        self._validate_category(category)
         self._handle_relations(category, product_types)
         category.save()
 
@@ -89,7 +89,7 @@ class CategorySerializer(serializers.ModelSerializer):
             instance.refresh_from_db()
 
         instance = super().update(instance, validated_data)
-        self._clean(instance)
+        self._validate_category(instance)
         self._handle_relations(instance, product_types)
         instance.save()
         return instance

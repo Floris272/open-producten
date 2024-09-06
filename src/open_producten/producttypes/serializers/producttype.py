@@ -70,10 +70,10 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         model = ProductType
         fields = "__all__"
 
-    def validate_category_ids(self, attrs):
-        if len(attrs) == 0:
+    def validate_category_ids(self, category_ids):
+        if len(category_ids) == 0:
             raise serializers.ValidationError("At least one category is required")
-        return attrs
+        return category_ids
 
     def _handle_relations(
         self, instance, related_product_types, categories, tags, conditions
