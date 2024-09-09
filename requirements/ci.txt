@@ -227,7 +227,7 @@ django-ordered-model==3.7.4
     #   -c requirements/base.txt
     #   -r requirements/base.txt
     #   django-admin-index
-django-otp==1.5.1
+django-otp==1.5.4
     # via
     #   -c requirements/base.txt
     #   -r requirements/base.txt
