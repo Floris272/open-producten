@@ -76,6 +76,18 @@ class TestProductTypeField(BaseApiTestCase):
         self.assertEqual(Field.objects.count(), 1)
         self.assertEqual(ProductType.objects.first().fields.first().name, "updated")
 
+    def test_partial_update_change_choices(self):
+        field = FieldFactory.create(
+            product_type=self.product_type, type="select", choices=["a", "b"]
+        )
+
+        data = {"choices": ["a"]}
+        response = self.patch(field.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Field.objects.count(), 1)
+        self.assertEqual(ProductType.objects.first().fields.first().choices, ["a"])
+
     def test_read_fields(self):
         field = self.create_field()
 

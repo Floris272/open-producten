@@ -1,12 +1,13 @@
 from django.core.exceptions import ValidationError
+from django.db import transaction
+
 from rest_framework import serializers
 
 from open_producten.products.models import Data, Product
 from open_producten.producttypes.models import Field, ProductType
+from open_producten.producttypes.serializers.category import SimpleProductTypeSerializer
 from open_producten.producttypes.serializers.children import FieldSerializer
-from open_producten.producttypes.serializers.producttype import (
-    UniformProductNameSerializer,
-)
+from open_producten.utils.serializers import model_to_dict_with_ids
 
 
 class DataSerializer(serializers.ModelSerializer):
@@ -14,22 +15,28 @@ class DataSerializer(serializers.ModelSerializer):
     field_id = serializers.PrimaryKeyRelatedField(
         write_only=True, queryset=Field.objects.all(), source="field"
     )
-    product = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Data
-        fields = "__all__"
+        exclude = ("product",)
 
 
-class SimpleProductTypeSerializer(serializers.ModelSerializer):
-    uniform_product_name = UniformProductNameSerializer()
+class BaseProductSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        without_data = attrs.copy()
+        without_data.pop("data", None)
 
-    class Meta:
-        model = ProductType
-        fields = "__all__"
+        if self.partial:
+            all_attrs = model_to_dict_with_ids(self.instance) | without_data
+        else:
+            all_attrs = without_data
+
+        instance = Product(**all_attrs)
+        instance.clean()
+        return attrs
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(BaseProductSerializer):
     product_type = SimpleProductTypeSerializer(read_only=True)
     product_type_id = serializers.PrimaryKeyRelatedField(
         write_only=True, queryset=ProductType.objects.all(), source="product_type"
@@ -40,17 +47,11 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = "__all__"
 
-    def _validate_product(self, product, errors):
-        try:
-            product.clean()
-        except ValidationError:
-            errors.append("")
-
+    @transaction.atomic()
     def create(self, validated_data):
         data = validated_data.pop("data")
 
         product = Product.objects.create(**validated_data)
-
         product_type = product.product_type
 
         required_fields = list(product_type.fields.filter(is_required=True).all())
@@ -67,9 +68,9 @@ class ProductSerializer(serializers.ModelSerializer):
             data_entry = Data(product=product, **entry)
             try:
                 data_entry.clean()
+                data_entry.save()
             except ValidationError as e:
                 data_errors.append(f"Data at index {idx}: {e}")
-            data_entry.save()
 
         if required_fields:
             data_errors.append(
@@ -78,41 +79,50 @@ class ProductSerializer(serializers.ModelSerializer):
 
         if data_errors:
             raise serializers.ValidationError({"data": data_errors})
-        elif not product.bsn and not product.kvk:  # TODO
-            raise serializers.ValidationError(
-                "A product must be linked to a bsn or kvk number (or both)"
-            )
-
         return product
 
+
+class DataUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField()
+
+    class Meta:
+        model = Data
+        exclude = ("field", "product")
+
+
+class ProductUpdateSerializer(BaseProductSerializer):
+    data = DataUpdateSerializer(many=True)
+
+    class Meta:
+        model = Product
+        exclude = ("product_type",)
+
+    @transaction.atomic()
     def update(self, instance, validated_data):
         data = validated_data.pop("data", None)
         product = super().update(instance, validated_data)
-        data_errors = []
 
         if data is not None:
+            data_errors = []
+
             current_data_ids = set(instance.data.values_list("id", flat=True))
+
             seen_data_ids = set()
             for idx, data_entry in enumerate(data):
                 data_id = data_entry.pop("id", None)
 
-                if data_id is None:
-                    data_entry = Data(product=product, **data_entry)
+                if data_id in seen_data_ids:
+                    data_errors.append(f"Duplicate data id: {data_id} at index {idx}")
+                seen_data_ids.add(data_id)
 
+                if data_id in current_data_ids:
+                    data = Data.objects.get(pk=data_id)
+                    data.value = data_entry["value"]
                     try:
-                        data_entry.clean()
+                        data.clean()
+                        data.save()
                     except ValidationError as e:
-                        data_errors.append(f"Data id {data_id} at index {idx}: {e}")
-                    data_entry.save()
-
-                elif data_id in current_data_ids:
-
-                    if data_id in seen_data_ids:
-                        data_errors.append(
-                            f"Duplicate data id: {data_id} at index {idx}"
-                        )
-
-                    seen_data_ids.add(data_id)
+                        data_errors.append(f"Data at index {idx}: {e}")
 
                 else:
                     try:
@@ -127,11 +137,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
             if data_errors:
                 raise serializers.ValidationError({"data": data_errors})
-            elif not product.bsn and not product.kvk:  # TODO
-                raise serializers.ValidationError(
-                    "A product must be linked to a bsn or kvk number (or both)"
-                )
 
-            Data.objects.filter(id__in=(current_data_ids - seen_data_ids)).delete()
+        product.refresh_from_db()
 
         return product

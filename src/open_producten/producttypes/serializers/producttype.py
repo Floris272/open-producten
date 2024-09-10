@@ -19,7 +19,7 @@ from .children import (
 class SimpleCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        exclude = ("id", "path", "depth", "numchild")
+        exclude = ("path", "depth", "numchild")
 
 
 class ProductTypeSerializer(serializers.ModelSerializer):

@@ -2,6 +2,8 @@ from django.db import transaction
 
 from rest_framework import serializers
 
+from open_producten.utils.serializers import model_to_dict_with_ids
+
 from ..models import (
     Condition,
     Field,
@@ -97,7 +99,12 @@ class FieldSerializer(serializers.ModelSerializer):
         exclude = ("product_type",)
 
     def validate(self, attrs):
-        instance = Field(**attrs)
+        if self.partial:
+            all_attrs = model_to_dict_with_ids(self.instance) | attrs
+        else:
+            all_attrs = attrs
+
+        instance = Field(**all_attrs)
         instance.clean()
         return attrs
 
