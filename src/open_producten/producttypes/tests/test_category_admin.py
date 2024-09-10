@@ -22,12 +22,12 @@ class TestCategoryAdminForm(TestCase):
         self.data = {
             "name": "test",
             "_position": "first-child",
-            "path": "0005",
+            "path": "00010001",
             "numchild": 1,
             "depth": 1,
         }
 
-    def test_parent_nodes_must_be_published(self):
+    def test_parent_nodes_must_be_published_when_publishing_child(self):
         parent = CategoryFactory.create(published=False)
         data = self.data | {"published": True, "_ref_node_id": parent.id}
 
@@ -47,7 +47,7 @@ class TestCategoryAdminForm(TestCase):
     def test_parent_nodes_cannot_be_unpublished_with_published_children(self):
         parent = CategoryFactory.create(published=False)
         parent.add_child(**{"name": "child", "published": True})
-        data = self.data | {"published": False, "_ref_node_id": None}
+        data = {"published": False, "_ref_node_id": None}
 
         form = create_form(data, parent)
 
@@ -66,7 +66,7 @@ class TestCategoryAdminFormSet(TestCase):
             fields=CategoryAdmin.list_editable,
         )
 
-        self.parent = CategoryFactory.create(published=True)
+        self.parent = Category.add_root(**{"name": "parent", "published": False})
         self.child = self.parent.add_child(**{"name": "child", "published": True})
 
     def test_parent_nodes_cannot_be_unpublished_with_published_children(self):

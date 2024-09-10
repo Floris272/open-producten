@@ -1,5 +1,7 @@
 from django.forms import model_to_dict
 
+from rest_framework.exceptions import ErrorDetail
+
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
 from open_producten.utils.tests.cases import BaseApiTestCase
@@ -25,6 +27,34 @@ class TestProductTypeField(BaseApiTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Field.objects.count(), 1)
         self.assertEqual(ProductType.objects.first().fields.first().name, "test field")
+
+    def test_create_normal_field_with_choices_returns_error(self):
+        response = self.post(self.data | {"choices": ["a", "b"]})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "choices": [
+                    ErrorDetail(string="textfield cannot have choices", code="invalid")
+                ]
+            },
+        )
+
+    def test_create_choice_field_without_choices_returns_error(self):
+        response = self.post(self.data | {"type": "select"})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "choices": [
+                    ErrorDetail(
+                        string="Choices are required for select", code="invalid"
+                    )
+                ]
+            },
+        )
 
     def test_update_field(self):
         field = self.create_field()

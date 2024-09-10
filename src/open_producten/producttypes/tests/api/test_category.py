@@ -23,6 +23,9 @@ def category_to_dict(category):
     ]
     category_dict["created_on"] = str(category.created_on.astimezone().isoformat())
     category_dict["updated_on"] = str(category.updated_on.astimezone().isoformat())
+    category_dict["parent_category"] = (
+        category.parent_category.id if category.parent_category else None
+    )
     return category_dict
 
 
@@ -79,6 +82,24 @@ class TestCategoryViewSet(BaseApiTestCase):
                         code="invalid",
                     )
                 ]
+            },
+        )
+
+    def test_create_published_child_with_unpublished_parent_returns_error(self):
+        parent = CategoryFactory.create(published=False)
+
+        data = self.data | {"parent_category": parent.id, "published": True}
+
+        response = self.post(data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "parent_category": ErrorDetail(
+                    string="Parent nodes have to be published in order to publish a child.",
+                    code="invalid",
+                )
             },
         )
 
@@ -142,6 +163,48 @@ class TestCategoryViewSet(BaseApiTestCase):
             },
         )
 
+    def test_update_unpublished_child_to_published_with_unpublished_parent_returns_error(
+        self,
+    ):
+        parent = CategoryFactory.create(published=False)
+        child = parent.add_child(name="child")
+
+        data = self.data | {"parent_category": parent.id, "published": True}
+
+        response = self.put(child.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "parent_category": ErrorDetail(
+                    string="Parent nodes have to be published in order to publish a child.",
+                    code="invalid",
+                )
+            },
+        )
+
+    def test_update_published_parent_to_unpublished_with_published_child_returns_error(
+        self,
+    ):
+        parent = CategoryFactory.create(published=True)
+        parent.add_child(name="child", published=True)
+
+        data = self.data | {"parent_category": None, "published": False}
+
+        response = self.put(parent.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "parent_category": ErrorDetail(
+                    string="Parent nodes cannot be unpublished if they have published children.",
+                    code="invalid",
+                )
+            },
+        )
+
     def test_partial_update(self):
         parent_category = CategoryFactory.create()
         category = parent_category.add_child(name="test-category")
@@ -200,6 +263,48 @@ class TestCategoryViewSet(BaseApiTestCase):
                         code="invalid",
                     )
                 ]
+            },
+        )
+
+    def test_partial_update_unpublished_child_to_published_with_unpublished_parent_returns_error(
+        self,
+    ):
+        parent = CategoryFactory.create(published=False)
+        child = parent.add_child(name="child")
+
+        data = {"published": True}
+
+        response = self.patch(child.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "parent_category": ErrorDetail(
+                    string="Parent nodes have to be published in order to publish a child.",
+                    code="invalid",
+                )
+            },
+        )
+
+    def test_partial_update_published_parent_to_unpublished_with_published_child_returns_error(
+        self,
+    ):
+        parent = CategoryFactory.create(published=True)
+        parent.add_child(name="child", published=True)
+
+        data = {"published": False}
+
+        response = self.patch(parent.id, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "parent_category": ErrorDetail(
+                    string="Parent nodes cannot be unpublished if they have published children.",
+                    code="invalid",
+                )
             },
         )
 
