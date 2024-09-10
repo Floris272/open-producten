@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from open_producten.locations.models import Contact, Location, Organisation
 from open_producten.utils.models import BasePublishableModel
 
 from .category import Category
@@ -107,6 +108,30 @@ class ProductType(BasePublishableModel):
         related_name="product_types",
         help_text=_("Categories which the product type is linked to"),
         through=CategoryProductType,
+    )
+
+    organisations = models.ManyToManyField(
+        Organisation,
+        verbose_name=_("Organisations"),
+        blank=True,
+        related_name="products",
+        help_text=_("Organisations which provides this product"),
+    )
+
+    contacts = models.ManyToManyField(
+        Contact,
+        verbose_name=_("Contacts"),
+        related_name="products",
+        blank=True,
+        help_text=_("The contacts responsible for the product"),
+    )
+
+    locations = models.ManyToManyField(
+        Location,
+        verbose_name=_("Locations"),
+        related_name="products",
+        blank=True,
+        help_text=_("Locations where the product is available at."),
     )
 
     class Meta:
