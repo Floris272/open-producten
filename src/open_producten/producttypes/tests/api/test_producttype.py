@@ -12,10 +12,11 @@ from open_producten.producttypes.tests.factories import (
     UniformProductNameFactory,
 )
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def product_type_to_dict(product_type):
-    product_type_dict = model_to_dict(product_type) | {"id": str(product_type.id)}
+    product_type_dict = model_to_dict_with_id(product_type)
     product_type_dict["questions"] = [
         model_to_dict(question) for question in product_type.questions.all()
     ]
@@ -34,10 +35,9 @@ def product_type_to_dict(product_type):
     product_type_dict["updated_on"] = str(
         product_type.updated_on.astimezone().isoformat()
     )
-    product_type_dict["uniform_product_name"] = model_to_dict(
+    product_type_dict["uniform_product_name"] = model_to_dict_with_id(
         product_type.uniform_product_name
-    ) | {"id": str(product_type.uniform_product_name.id)}
-
+    )
     return product_type_dict
 
 

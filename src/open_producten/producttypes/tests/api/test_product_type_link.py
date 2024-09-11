@@ -1,13 +1,12 @@
-from django.forms import model_to_dict
-
 from open_producten.producttypes.models import Link, ProductType
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 from ..factories import LinkFactory, ProductTypeFactory
 
 
 def link_to_dict(link):
-    return model_to_dict(link, exclude=["product_type"]) | {"id": str(link.id)}
+    return model_to_dict_with_id(link, exclude=["product_type"])
 
 
 class TestProductTypeLink(BaseApiTestCase):

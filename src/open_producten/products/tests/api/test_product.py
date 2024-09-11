@@ -1,8 +1,6 @@
 import datetime
 import uuid
 
-from django.forms import model_to_dict
-
 from freezegun import freeze_time
 from rest_framework.exceptions import ErrorDetail
 
@@ -11,31 +9,28 @@ from open_producten.products.tests.factories import DataFactory, ProductFactory
 from open_producten.producttypes.models import Field, FieldTypes
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def product_to_dict(product):
-    product_dict = model_to_dict(product) | {"id": str(product.id)}
+    product_dict = model_to_dict_with_id(product)
     product_dict["start_date"] = str(product_dict["start_date"])
     product_dict["data"] = [
-        model_to_dict(data, exclude=["product"])
-        | {
-            "id": str(data.id),
-            "field": model_to_dict(data.field, exclude=["product_type"])
-            | {"id": str(data.field.id)},
-        }
+        model_to_dict_with_id(data, exclude=["product"])
+        | {"field": model_to_dict_with_id(data.field, exclude=["product_type"])}
         for data in product.data.all()
     ]
     product_dict["end_date"] = str(product_dict["end_date"])
     product_dict["created_on"] = str(product.created_on.astimezone().isoformat())
     product_dict["updated_on"] = str(product.updated_on.astimezone().isoformat())
 
-    product_dict["product_type"] = model_to_dict(
+    product_dict["product_type"] = model_to_dict_with_id(
         product.product_type,
         exclude=("categories", "conditions", "tags", "related_product_types"),
-    ) | {"id": str(product.product_type.id)}
-    product_dict["product_type"]["uniform_product_name"] = model_to_dict(
+    )
+    product_dict["product_type"]["uniform_product_name"] = model_to_dict_with_id(
         product.product_type.uniform_product_name
-    ) | {"id": str(product.product_type.uniform_product_name.id)}
+    )
 
     product_dict["product_type"]["created_on"] = str(
         product.product_type.created_on.astimezone().isoformat()

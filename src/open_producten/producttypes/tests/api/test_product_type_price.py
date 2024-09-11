@@ -14,10 +14,11 @@ from open_producten.producttypes.tests.factories import (
     ProductTypeFactory,
 )
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def price_to_dict(price):
-    price_dict = model_to_dict(price, exclude=["product_type"]) | {"id": str(price.id)}
+    price_dict = model_to_dict_with_id(price, exclude=["product_type"])
     price_dict["options"] = [model_to_dict(option) for option in price.options.all()]
     price_dict["valid_from"] = str(price_dict["valid_from"])
 

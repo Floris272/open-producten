@@ -7,7 +7,7 @@ from open_producten.products.models import Data, Product
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.serializers.category import SimpleProductTypeSerializer
 from open_producten.producttypes.serializers.children import FieldSerializer
-from open_producten.utils.serializers import model_to_dict_with_ids
+from open_producten.utils.serializers import model_to_dict_with_related_ids
 
 
 class DataSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class BaseProductSerializer(serializers.ModelSerializer):
         without_data.pop("data", None)
 
         if self.partial:
-            all_attrs = model_to_dict_with_ids(self.instance) | without_data
+            all_attrs = model_to_dict_with_related_ids(self.instance) | without_data
         else:
             all_attrs = without_data
 

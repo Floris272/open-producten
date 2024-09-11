@@ -1,14 +1,13 @@
-from django.forms import model_to_dict
-
 from rest_framework.exceptions import ErrorDetail
 
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def field_to_dict(field):
-    return model_to_dict(field, exclude=["product_type"]) | {"id": str(field.id)}
+    return model_to_dict_with_id(field, exclude=["product_type"])
 
 
 class TestProductTypeField(BaseApiTestCase):

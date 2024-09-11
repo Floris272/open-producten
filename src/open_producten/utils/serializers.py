@@ -20,7 +20,8 @@ def build_array_duplicates_error_message(objects: list, field: str, errors):
         errors[field] = errors_messages
 
 
-def model_to_dict_with_ids(model: BaseModel) -> dict:
+def model_to_dict_with_related_ids(model: BaseModel) -> dict:
+    """Creates a dict from a model and appends UUID fields with '_id'"""
     model_dict = model_to_dict(model)
 
     for k, v in list(model_dict.items()):

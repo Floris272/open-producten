@@ -2,7 +2,7 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from open_producten.utils.serializers import model_to_dict_with_ids
+from open_producten.utils.serializers import model_to_dict_with_related_ids
 
 from ..models import (
     Condition,
@@ -100,7 +100,7 @@ class FieldSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if self.partial:
-            all_attrs = model_to_dict_with_ids(self.instance) | attrs
+            all_attrs = model_to_dict_with_related_ids(self.instance) | attrs
         else:
             all_attrs = attrs
 
