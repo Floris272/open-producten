@@ -23,12 +23,6 @@ INSTALLED_APPS += [
 ]
 
 #
-# FIXTURES
-#
-
-FIXTURE_DIRS = (DJANGO_PROJECT_DIR / "fixtures",)
-
-#
 # Custom settings
 #
 PROJECT_NAME = "open_producten"
@@ -56,6 +50,8 @@ REQUESTS_DEFAULT_TIMEOUT = (10, 30)
 ADMIN_INDEX_DISPLAY_DROP_DOWN_MENU_CONDITION_FUNCTION = (
     "open_producten.utils.django_two_factor_auth.should_display_dropdown_menu"
 )
+
+ADMIN_INDEX_SHOW_REMAINING_APPS = False
 
 #
 # Django rest framework
