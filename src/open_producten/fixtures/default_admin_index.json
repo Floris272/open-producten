@@ -88,7 +88,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 2,
+        "order": 3,
         "translations": {
             "nl": "Gebruikers"
         },
@@ -125,7 +125,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 3,
+        "order": 4,
         "translations": {
             "nl": "Configuratie"
         },
@@ -150,7 +150,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 4,
+        "order": 5,
         "translations": {
             "nl": "Integraties"
         },
@@ -167,7 +167,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 6,
+        "order": 7,
         "translations": {
             "nl": "Misc"
         },
@@ -236,7 +236,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 5,
+        "order": 6,
         "translations": {
             "nl": "logs"
         },
@@ -258,6 +258,39 @@
             [
                 "axes",
                 "accesslog"
+            ]
+        ]
+    }
+},
+{
+    "model": "admin_index.appgroup",
+    "fields": {
+        "order": 2,
+        "translations": {
+            "nl": "Locaties & Organisaties"
+        },
+        "name": "Locations & Organisations",
+        "slug": "locations-organisations",
+        "models": [
+            [
+                "locations",
+                "contact"
+            ],
+            [
+                "locations",
+                "location"
+            ],
+            [
+                "locations",
+                "neighbourhood"
+            ],
+            [
+                "locations",
+                "organisation"
+            ],
+            [
+                "locations",
+                "organisationtype"
             ]
         ]
     }
