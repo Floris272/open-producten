@@ -27,13 +27,15 @@ def update_admin_index(sender, **kwargs):
     for app_config in apps.get_app_configs():
         if app_config.name.startswith(project_name):
             create_contenttypes(app_config, verbosity=0)
-
+    out = StringIO()
     try:
-        call_command("loaddata", "default_admin_index", verbosity=0, stdout=StringIO())
+        call_command("loaddata", "default_admin_index", verbosity=0, stdout=out)
     except Exception as exc:
-        logger.warning(f"Unable to load default_admin_index fixture ({exc})")
+        logger.warning(
+            f"Unable to load default_admin_index fixture ({exc}). You might have to regenerate the fixtures through 'bin/generate_admin_index_fixtures.sh'"
+        )
         return
-    logger.info("Loaded django-admin-index fixture")
+    logger.info("Loaded django-admin-index fixture:\n%s", out.getvalue())
 
 
 class AccountsConfig(AppConfig):

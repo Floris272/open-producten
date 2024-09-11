@@ -30,7 +30,7 @@ class DjangoAdminConfigTests(TestCase):
         self.assertEqual(
             cm.output,
             [
-                f"WARNING:{accounts_apps.__name__}:Unable to load default_admin_index fixture ()"
+                f"WARNING:{accounts_apps.__name__}:Unable to load default_admin_index fixture (). You might have to regenerate the fixtures through 'bin/generate_admin_index_fixtures.sh'"
             ],
         )
 
@@ -44,5 +44,5 @@ class DjangoAdminConfigTests(TestCase):
 
         self.assertEqual(
             cm.output,
-            [f"INFO:{accounts_apps.__name__}:Loaded django-admin-index fixture"],
+            [f"INFO:{accounts_apps.__name__}:Loaded django-admin-index fixture:\n"],
         )
