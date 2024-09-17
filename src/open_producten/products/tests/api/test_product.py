@@ -57,6 +57,11 @@ class TestProduct(BaseApiTestCase):
         }
         self.path = "/api/v1/products/"
 
+    def test_read_product_without_credentials_returns_error(self):
+        self.client._credentials = {}
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 401)
+
     def create_product(self):
         return ProductFactory.create(bsn="111222333")
 
