@@ -63,7 +63,7 @@ class TestProduct(BaseApiTestCase):
         response = self.client.get(self.path)
         self.assertEqual(response.status_code, 401)
 
-    def create_product(self):
+    def _create_product(self):
         return ProductFactory.create(bsn="111222333")
 
     def test_create_product(self):
@@ -218,7 +218,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(Field.objects.count(), 1)
 
     def test_update_product(self):
-        product = self.create_product()
+        product = self._create_product()
 
         data = self.data | {"end_date": datetime.date(2025, 12, 31)}
         response = self.put(product.id, data)
@@ -227,7 +227,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_update_product_without_bsn_or_kvk(self):
-        product = self.create_product()
+        product = self._create_product()
 
         data = self.data.copy()
         data.pop("bsn")
@@ -250,7 +250,7 @@ class TestProduct(BaseApiTestCase):
         field = FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.TEXTFIELD, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
         data_instance = DataFactory.create(product=product, field=field, value="abc")
 
         data = self.data | {"data": [{"id": data_instance.id, "value": "123"}]}
@@ -267,7 +267,7 @@ class TestProduct(BaseApiTestCase):
         field = FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.TEXTFIELD, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
         data_instance = DataFactory.create(product=product, field=field, value="abc")
 
         data = self.data | {
@@ -298,9 +298,9 @@ class TestProduct(BaseApiTestCase):
         field = FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.TEXTFIELD, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
         data_instance = DataFactory.create(
-            product=self.create_product(), field=field, value="abc"
+            product=self._create_product(), field=field, value="abc"
         )
 
         data = self.data | {
@@ -329,7 +329,7 @@ class TestProduct(BaseApiTestCase):
         FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.TEXTFIELD, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
 
         dummy_id = uuid.uuid4()
 
@@ -357,7 +357,7 @@ class TestProduct(BaseApiTestCase):
         field = FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.NUMBER, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
         data_instance = DataFactory.create(product=product, field=field, value="123")
 
         data = self.data | {
@@ -381,7 +381,7 @@ class TestProduct(BaseApiTestCase):
         )
 
     def test_partial_update_product(self):
-        product = self.create_product()
+        product = self._create_product()
 
         data = {"end_date": datetime.date(2025, 12, 31)}
         response = self.patch(product.id, data)
@@ -393,7 +393,7 @@ class TestProduct(BaseApiTestCase):
         field = FieldFactory.create(
             product_type=self.product_type, type=FieldTypes.TEXTFIELD, is_required=True
         )
-        product = self.create_product()
+        product = self._create_product()
         data_instance = DataFactory.create(product=product, field=field, value="abc")
 
         data = {"data": [{"id": data_instance.id, "value": "123"}]}
@@ -407,7 +407,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(data_instance.value, "123")
 
     def test_read_products(self):
-        product = self.create_product()
+        product = self._create_product()
 
         response = self.get()
 
@@ -415,7 +415,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(response.data, [product_to_dict(product)])
 
     def test_read_product(self):
-        product = self.create_product()
+        product = self._create_product()
 
         response = self.get(product.id)
 
@@ -423,7 +423,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(response.data, product_to_dict(product))
 
     def test_read_product_with_data(self):
-        product = self.create_product()
+        product = self._create_product()
         field = FieldFactory.create(
             product_type=self.product_type, is_required=True, type="textfield"
         )
@@ -433,7 +433,7 @@ class TestProduct(BaseApiTestCase):
         self.assertEqual(response.data, product_to_dict(product))
 
     def test_delete_product(self):
-        product = self.create_product()
+        product = self._create_product()
         response = self.delete(product.id)
 
         self.assertEqual(response.status_code, 204)
