@@ -1,5 +1,5 @@
 ==================
-open_producten
+open_producten (PoC)
 ==================
 
 :Version: 0.1.0
@@ -8,16 +8,20 @@ open_producten
 
 |docs| |docker|
 
-``<oneliner describing the project>``
+Plek voor gemeenten om product-typen en producten te beheren om ze te gebruiken in andere applicaties.
 (`English version`_)
 
-Ontwikkeld door `Maykin B.V.`_ in opdracht ``<client>``.
+Ontwikkeld door `Maykin B.V.`_.
 
 
 Introductie
 ===========
 
-``<describe the project in a few paragraphs and briefly mention the features>``
+Open Producten is een applicatie waarin product typen en producten op een enkele plek kunnen worden beheerd.
+Andere applicaties zoals Open Inwoner en Open Formulieren kunnen met Open Producten via een REST API integreren om product typen informatie te tonen, producten aan te maken of om de actuele prijs van een product type op te halen.
+
+Dit project is op dit moment een proof of concept.
+
 
 
 API specificatie
@@ -28,18 +32,9 @@ API specificatie
 ==============  ==============  =============================
 Versie          Release datum   API specificatie
 ==============  ==============  =============================
-latest          n/a             `ReDoc <https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/open_producten/api/openapi.yaml>`_,
-                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/open_producten/api/openapi.yaml>`_,
-                                (`verschillen <https://github.com/maykinmedia/open-producten/compare/0.1.0..main#diff-b9c28fec6c3f3fa5cff870d24601d6ab7027520f3b084cc767aefd258cb8c40a>`_)
-0.1.0           YYYY-MM-DD      `ReDoc <https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/0.1.0/src/open_producten/api/openapi.yaml>`_,
-                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/0.1.0/src/open_producten/api/openapi.yaml>`_
+latest          n/a             `ReDoc <https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/openapi.yaml>`_,
+                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/openapi.yaml>`_
 ==============  ==============  =============================
-
-Vorige versies worden nog 6 maanden ondersteund nadat de volgende versie is 
-uitgebracht.
-
-Zie: `Alle versies en wijzigingen <https://github.com/maykinmedia/open-producten/blob/main/CHANGELOG.rst>`_
-
 
 Ontwikkelaars
 =============

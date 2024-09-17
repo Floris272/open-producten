@@ -1,5 +1,5 @@
 ==================
-open_producten
+open_producten (PoC)
 ==================
 
 :Version: 0.1.0
@@ -8,17 +8,19 @@ open_producten
 
 |docs| |docker|
 
-``<oneliner describing the project>``
+Place for municipalities to manage product types and products to be able to use them in other applications.
 (`Nederlandse versie`_)
 
-Developed by `Maykin B.V.`_ for ``<client>``.
+Developed by `Maykin B.V.`_.
 
 
 Introduction
 ============
 
-``<describe the project in a few paragraphs and briefly mention the features>``
+Open Producten is an application where product types and products can be managed in a single place.
+Other applications like Open Inwoner and Open Formulieren can integrate Open Producten using its REST API to show product type information, create products or to get the current price for a product type.
 
+This Project is a proof of concept at the moment.
 
 API specification
 =================
@@ -29,10 +31,7 @@ API specification
 Version         Release date    API specification
 ==============  ==============  =============================
 latest          n/a             `ReDoc <https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/open_producten/api/openapi.yaml>`_,
-                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/open_producten/api/openapi.yaml>`_,
-                                (`diff <https://github.com/maykinmedia/open-producten/compare/0.1.0..main#diff-b9c28fec6c3f3fa5cff870d24601d6ab7027520f3b084cc767aefd258cb8c40a>`_)
-0.1.0           YYYY-MM-DD      `ReDoc <https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/0.1.0/src/open_producten/api/openapi.yaml>`_,
-                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/0.1.0/src/open_producten/api/openapi.yaml>`_
+                                `Swagger <https://petstore.swagger.io/?url=https://raw.githubusercontent.com/maykinmedia/open-producten/main/src/open_producten/api/openapi.yaml>`_
 ==============  ==============  =============================
 
 
