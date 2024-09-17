@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -56,7 +56,7 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     # Simply show the master template.
-    path("", TemplateView.as_view(template_name="master.html"), name="root"),
+    path("", RedirectView.as_view(pattern_name="admin:index")),
     path(
         "api/v1/",
         include(

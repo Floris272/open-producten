@@ -8,6 +8,7 @@ from ..models import Category, Condition, ProductType, Tag, UniformProductName
 from .children import (
     ConditionSerializer,
     FieldSerializer,
+    FileSerializer,
     LinkSerializer,
     PriceSerializer,
     QuestionSerializer,
@@ -65,6 +66,7 @@ class ProductTypeSerializer(serializers.ModelSerializer):
     fields = FieldSerializer(many=True, read_only=True)
     prices = PriceSerializer(many=True, read_only=True)
     links = LinkSerializer(many=True, read_only=True)
+    files = FileSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductType
