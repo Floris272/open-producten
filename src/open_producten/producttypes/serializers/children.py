@@ -52,7 +52,9 @@ class PriceSerializer(serializers.ModelSerializer):
         option_errors = []
 
         if options is not None:
-            current_option_ids = set(price.options.values_list("id", flat=True))
+            current_option_ids = set(
+                price.options.values_list("id", flat=True).distinct()
+            )
             seen_option_ids = set()
             for idx, option in enumerate(options):
                 option_id = option.pop("id", None)
@@ -112,7 +114,7 @@ class FieldSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        exclude = ("id", "product_type")
+        exclude = ("product_type",)
 
 
 class TagTypeSerializer(serializers.ModelSerializer):

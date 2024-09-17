@@ -54,7 +54,7 @@ class ProductSerializer(BaseProductSerializer):
         product = Product.objects.create(**validated_data)
         product_type = product.product_type
 
-        required_fields = list(product_type.fields.filter(is_required=True).all())
+        required_fields = list(product_type.fields.filter(is_required=True))
         data_errors = []
         for idx, entry in enumerate(data):
             field = entry["field"]
@@ -105,7 +105,9 @@ class ProductUpdateSerializer(BaseProductSerializer):
         if data is not None:
             data_errors = []
 
-            current_data_ids = set(instance.data.values_list("id", flat=True))
+            current_data_ids = set(
+                instance.data.values_list("id", flat=True).distinct()
+            )
 
             seen_data_ids = set()
             for idx, data_entry in enumerate(data):

@@ -38,6 +38,8 @@ def product_to_dict(product):
     product_dict["product_type"]["updated_on"] = str(
         product.product_type.updated_on.astimezone().isoformat()
     )
+    product_dict["product_type"]["icon"] = None
+    product_dict["product_type"]["image"] = None
     return product_dict
 
 
@@ -63,6 +65,8 @@ class TestProduct(BaseApiTestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Product.objects.count(), 1)
+        product = Product.objects.first()
+        self.assertEqual(response.data, product_to_dict(product))
 
     def test_create_product_without_bsn_or_kvk_returns_error(self):
         data = self.data.copy()
@@ -70,6 +74,18 @@ class TestProduct(BaseApiTestCase):
 
         response = self.post(data)
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "non_field_errors": [
+                    ErrorDetail(
+                        string="A product must be linked to a bsn or kvk number (or both)",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
+        self.assertEqual(Product.objects.count(), 0)
 
     def test_create_product_without_required_fields_returns_error(self):
         field = FieldFactory.create(
@@ -212,6 +228,17 @@ class TestProduct(BaseApiTestCase):
         response = self.put(product.id, data)
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "non_field_errors": [
+                    ErrorDetail(
+                        string="A product must be linked to a bsn or kvk number (or both)",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
 
     def test_update_product_data(self):
         field = FieldFactory.create(

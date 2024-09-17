@@ -16,7 +16,7 @@ class DataInlineFormSet(BaseInlineFormSet):
             return
 
         product_type = ProductType.objects.get(pk=self.data["product_type"])
-        required_fields = list(product_type.fields.filter(is_required=True).all())
+        required_fields = list(product_type.fields.filter(is_required=True))
 
         for form in self.forms:
 
