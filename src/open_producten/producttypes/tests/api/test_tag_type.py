@@ -1,14 +1,12 @@
-from django.forms import model_to_dict
-
 from open_producten.producttypes.models import TagType
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 from ..factories import TagTypeFactory
 
 
-def tag_type_to_dict(tag):
-    tag_dict = model_to_dict(tag) | {"id": str(tag.id)}
-    return tag_dict
+def tag_type_to_dict(tag_type):
+    return model_to_dict_with_id(tag_type)
 
 
 class TestProductTypeTagType(BaseApiTestCase):

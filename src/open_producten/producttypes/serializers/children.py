@@ -2,6 +2,8 @@ from django.db import transaction
 
 from rest_framework import serializers
 
+from open_producten.utils.serializers import model_to_dict_with_related_ids
+
 from ..models import (
     Condition,
     Field,
@@ -50,7 +52,9 @@ class PriceSerializer(serializers.ModelSerializer):
         option_errors = []
 
         if options is not None:
-            current_option_ids = set(price.options.values_list("id", flat=True))
+            current_option_ids = set(
+                price.options.values_list("id", flat=True).distinct()
+            )
             seen_option_ids = set()
             for idx, option in enumerate(options):
                 option_id = option.pop("id", None)
@@ -97,7 +101,12 @@ class FieldSerializer(serializers.ModelSerializer):
         exclude = ("product_type",)
 
     def validate(self, attrs):
-        instance = Field(**attrs)
+        if self.partial:
+            all_attrs = model_to_dict_with_related_ids(self.instance) | attrs
+        else:
+            all_attrs = attrs
+
+        instance = Field(**all_attrs)
         instance.clean()
         return attrs
 
@@ -105,7 +114,7 @@ class FieldSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        exclude = ("id", "product_type")
+        exclude = ("product_type",)
 
 
 class TagTypeSerializer(serializers.ModelSerializer):

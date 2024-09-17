@@ -12,10 +12,11 @@ from open_producten.producttypes.tests.factories import (
     UniformProductNameFactory,
 )
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def product_type_to_dict(product_type):
-    product_type_dict = model_to_dict(product_type) | {"id": str(product_type.id)}
+    product_type_dict = model_to_dict_with_id(product_type)
     product_type_dict["questions"] = [
         model_to_dict(question) for question in product_type.questions.all()
     ]
@@ -28,16 +29,32 @@ def product_type_to_dict(product_type):
     product_type_dict["links"] = [
         model_to_dict(link) for link in product_type.links.all()
     ]
+    product_type_dict["files"] = [
+        model_to_dict(file) for file in product_type.files.all()
+    ]
+
+    product_type_dict["categories"] = []
+    for category in product_type.categories.all():
+        category_dict = model_to_dict_with_id(
+            category, exclude=("path", "depth", "numchild")
+        )
+        category_dict["icon"] = None
+        category_dict["image"] = None
+        category_dict["created_on"] = str(category.created_on.astimezone().isoformat())
+        category_dict["updated_on"] = str(category.updated_on.astimezone().isoformat())
+        product_type_dict["categories"].append(category_dict)
+
     product_type_dict["created_on"] = str(
         product_type.created_on.astimezone().isoformat()
     )
     product_type_dict["updated_on"] = str(
         product_type.updated_on.astimezone().isoformat()
     )
-    product_type_dict["uniform_product_name"] = model_to_dict(
+    product_type_dict["uniform_product_name"] = model_to_dict_with_id(
         product_type.uniform_product_name
-    ) | {"id": str(product_type.uniform_product_name.id)}
-
+    )
+    product_type_dict["icon"] = None
+    product_type_dict["image"] = None
     return product_type_dict
 
 
@@ -62,6 +79,8 @@ class TestProducttypeViewSet(BaseApiTestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(ProductType.objects.count(), 1)
+        product_type = ProductType.objects.first()
+        self.assertEqual(response.data, product_type_to_dict(product_type))
 
     def test_create_product_type_without_fields_returns_error(self):
         data = self.data.copy()
@@ -69,6 +88,16 @@ class TestProducttypeViewSet(BaseApiTestCase):
         response = self.post(data)
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "category_ids": [
+                    ErrorDetail(
+                        string="At least one category is required", code="invalid"
+                    )
+                ]
+            },
+        )
 
     def test_create_product_type_with_related_type(self):
         product_type = ProductTypeFactory.create()
@@ -95,6 +124,9 @@ class TestProducttypeViewSet(BaseApiTestCase):
         self.assertEqual(ProductType.objects.count(), 1)
         self.assertEqual(
             ProductType.objects.first().categories.first().name, category.name
+        )
+        self.assertEqual(
+            response.data, product_type_to_dict(ProductType.objects.first())
         )
 
     def test_create_product_type_with_tag(self):

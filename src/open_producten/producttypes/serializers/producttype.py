@@ -8,6 +8,7 @@ from ..models import Category, Condition, ProductType, Tag, UniformProductName
 from .children import (
     ConditionSerializer,
     FieldSerializer,
+    FileSerializer,
     LinkSerializer,
     PriceSerializer,
     QuestionSerializer,
@@ -19,7 +20,7 @@ from .children import (
 class SimpleCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        exclude = ("id", "path", "depth", "numchild")
+        exclude = ("path", "depth", "numchild")
 
 
 class ProductTypeSerializer(serializers.ModelSerializer):
@@ -65,6 +66,7 @@ class ProductTypeSerializer(serializers.ModelSerializer):
     fields = FieldSerializer(many=True, read_only=True)
     prices = PriceSerializer(many=True, read_only=True)
     links = LinkSerializer(many=True, read_only=True)
+    files = FileSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductType

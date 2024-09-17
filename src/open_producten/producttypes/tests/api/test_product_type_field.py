@@ -1,14 +1,13 @@
-from django.forms import model_to_dict
-
 from rest_framework.exceptions import ErrorDetail
 
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 
 def field_to_dict(field):
-    return model_to_dict(field, exclude=["product_type"]) | {"id": str(field.id)}
+    return model_to_dict_with_id(field, exclude=["product_type"])
 
 
 class TestProductTypeField(BaseApiTestCase):
@@ -75,6 +74,18 @@ class TestProductTypeField(BaseApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Field.objects.count(), 1)
         self.assertEqual(ProductType.objects.first().fields.first().name, "updated")
+
+    def test_partial_update_change_choices(self):
+        field = FieldFactory.create(
+            product_type=self.product_type, type="select", choices=["a", "b"]
+        )
+
+        data = {"choices": ["a"]}
+        response = self.patch(field.id, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Field.objects.count(), 1)
+        self.assertEqual(ProductType.objects.first().fields.first().choices, ["a"])
 
     def test_read_fields(self):
         field = self.create_field()

@@ -26,6 +26,9 @@ def category_to_dict(category):
     category_dict["parent_category"] = (
         category.parent_category.id if category.parent_category else None
     )
+
+    category_dict["icon"] = None
+    category_dict["image"] = None
     return category_dict
 
 
@@ -52,9 +55,10 @@ class TestCategoryViewSet(BaseApiTestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Category.objects.count(), 2)
-        self.assertEqual(
-            Category.objects.get(id=response.data["id"]).get_parent(), parent
-        )
+
+        category = Category.objects.get(id=response.data["id"])
+        self.assertEqual(category.get_parent(), parent)
+        self.assertEqual(response.data, category_to_dict(category))
 
     def test_create_category_with_product_type(self):
         product_type = ProductTypeFactory.create()

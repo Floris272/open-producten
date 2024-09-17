@@ -1,14 +1,12 @@
-from django.forms import model_to_dict
-
 from open_producten.producttypes.models import Condition
 from open_producten.utils.tests.cases import BaseApiTestCase
+from open_producten.utils.tests.helpers import model_to_dict_with_id
 
 from ..factories import ConditionFactory
 
 
 def condition_to_dict(condition):
-    condition_dict = model_to_dict(condition) | {"id": str(condition.id)}
-    return condition_dict
+    return model_to_dict_with_id(condition)
 
 
 class TestProductTypeCondition(BaseApiTestCase):

@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -16,6 +16,7 @@ from maykin_2fa import monkeypatch_admin
 from maykin_2fa.urls import urlpatterns, webauthn_urlpatterns
 
 from open_producten.accounts.views.password_reset import PasswordResetView
+from open_producten.products.router import product_urlpatterns
 from open_producten.producttypes.router import product_type_urlpatterns
 
 # Configure admin
@@ -55,7 +56,7 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     # Simply show the master template.
-    path("", TemplateView.as_view(template_name="master.html"), name="root"),
+    path("", RedirectView.as_view(pattern_name="admin:index")),
     path(
         "api/v1/",
         include(
@@ -76,6 +77,7 @@ urlpatterns = [
                     name="redoc",
                 ),
                 path("", include(product_type_urlpatterns)),
+                path("", include(product_urlpatterns)),
             ]
         ),
     ),
