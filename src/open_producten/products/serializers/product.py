@@ -105,9 +105,7 @@ class ProductUpdateSerializer(BaseProductSerializer):
         if data is not None:
             data_errors = []
 
-            current_data_ids = set(
-                instance.data.values_list("id", flat=True).distinct()
-            )
+            current_data_ids = instance.data.values_list("id", flat=True).distinct()
 
             seen_data_ids = set()
             for idx, data_entry in enumerate(data):
