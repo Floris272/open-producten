@@ -47,6 +47,7 @@ def product_to_dict(product):
 class TestProduct(BaseApiTestCase):
 
     def setUp(self):
+        super().setUp()
         self.product_type = ProductTypeFactory.create()
         self.data = {
             "product_type_id": self.product_type.id,
