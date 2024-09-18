@@ -1,6 +1,7 @@
 from django.forms import model_to_dict
 
 from rest_framework.exceptions import ErrorDetail
+from rest_framework.test import APIClient
 
 from open_producten.producttypes.models import Category, Link
 from open_producten.producttypes.tests.factories import (
@@ -43,8 +44,7 @@ class TestCategoryViewSet(BaseApiTestCase):
         self.path = "/api/v1/categories/"
 
     def test_read_category_without_credentials_returns_error(self):
-        self.client._credentials = {}
-        response = self.client.get(self.path)
+        response = APIClient().get(self.path)
         self.assertEqual(response.status_code, 401)
 
     def test_create_minimal_category(self):

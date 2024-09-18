@@ -3,6 +3,7 @@ import uuid
 
 from freezegun import freeze_time
 from rest_framework.exceptions import ErrorDetail
+from rest_framework.test import APIClient
 
 from open_producten.products.models import Data, Product
 from open_producten.products.tests.factories import DataFactory, ProductFactory
@@ -59,8 +60,7 @@ class TestProduct(BaseApiTestCase):
         self.path = "/api/v1/products/"
 
     def test_read_product_without_credentials_returns_error(self):
-        self.client._credentials = {}
-        response = self.client.get(self.path)
+        response = APIClient().get(self.path)
         self.assertEqual(response.status_code, 401)
 
     def _create_product(self):

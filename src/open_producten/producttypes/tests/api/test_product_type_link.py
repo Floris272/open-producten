@@ -1,3 +1,5 @@
+from rest_framework.test import APIClient
+
 from open_producten.producttypes.models import Link, ProductType
 from open_producten.utils.tests.cases import BaseApiTestCase
 from open_producten.utils.tests.helpers import model_to_dict_with_id
@@ -21,8 +23,7 @@ class TestProductTypeLink(BaseApiTestCase):
         return LinkFactory.create(product_type=self.product_type)
 
     def test_read_link_without_credentials_returns_error(self):
-        self.client._credentials = {}
-        response = self.client.get(self.path)
+        response = APIClient().get(self.path)
         self.assertEqual(response.status_code, 401)
 
     def test_create_link(self):

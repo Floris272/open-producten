@@ -1,4 +1,5 @@
 from rest_framework.exceptions import ErrorDetail
+from rest_framework.test import APIClient
 
 from open_producten.producttypes.models import Field, ProductType
 from open_producten.producttypes.tests.factories import FieldFactory, ProductTypeFactory
@@ -22,8 +23,7 @@ class TestProductTypeField(BaseApiTestCase):
         return FieldFactory.create(product_type=self.product_type)
 
     def test_read_field_without_credentials_returns_error(self):
-        self.client._credentials = {}
-        response = self.client.get(self.path)
+        response = APIClient().get(self.path)
         self.assertEqual(response.status_code, 401)
 
     def test_create_field(self):
