@@ -6,6 +6,7 @@ from django.forms import model_to_dict
 
 from freezegun import freeze_time
 from rest_framework.exceptions import ErrorDetail
+from rest_framework.test import APIClient
 
 from open_producten.producttypes.models import Price, PriceOption, ProductType
 from open_producten.producttypes.tests.factories import (
@@ -29,14 +30,19 @@ def price_to_dict(price):
 class TestProductTypePrice(BaseApiTestCase):
 
     def setUp(self):
+        super().setUp()
         self.product_type = ProductTypeFactory()
         self.price_data = {"valid_from": datetime.date(2024, 1, 2)}
         self.path = f"/api/v1/producttypes/{self.product_type.id}/prices/"
 
-    def create_price(self):
+    def _create_price(self):
         return PriceFactory.create(
             product_type=self.product_type, valid_from=datetime.date(2024, 1, 2)
         )
+
+    def test_read_price_without_credentials_returns_error(self):
+        response = APIClient().get(self.path)
+        self.assertEqual(response.status_code, 401)
 
     def test_create_price(self):
         response = self.post(self.price_data)
@@ -64,7 +70,7 @@ class TestProductTypePrice(BaseApiTestCase):
         )
 
     def test_update_price_removing_options(self):
-        price = self.create_price()
+        price = self._create_price()
         PriceOptionFactory.create(price=price)
         PriceOptionFactory.create(price=price)
 
@@ -80,7 +86,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.count(), 0)
 
     def test_update_price_updating_and_removing_options(self):
-        price = self.create_price()
+        price = self._create_price()
         option_to_be_updated = PriceOptionFactory.create(price=price)
         PriceOptionFactory.create(price=price)
 
@@ -103,7 +109,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.first().amount, Decimal("20"))
 
     def test_update_price_creating_and_deleting_options(self):
-        price = self.create_price()
+        price = self._create_price()
         PriceOptionFactory.create(price=price)
 
         data = {
@@ -119,7 +125,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.first().amount, Decimal("20"))
 
     def test_update_price_with_option_not_part_of_price_returns_error(self):
-        price = self.create_price()
+        price = self._create_price()
 
         option = PriceOptionFactory.create(price=PriceFactory.create())
 
@@ -146,7 +152,7 @@ class TestProductTypePrice(BaseApiTestCase):
         )
 
     def test_update_price_with_option_with_unknown_id_returns_error(self):
-        price = self.create_price()
+        price = self._create_price()
         non_existing_id = uuid.uuid4()
 
         data = {
@@ -170,7 +176,7 @@ class TestProductTypePrice(BaseApiTestCase):
         )
 
     def test_update_price_with_duplicate_option_ids_returns_error(self):
-        price = self.create_price()
+        price = self._create_price()
 
         option = PriceOptionFactory.create(price=price)
 
@@ -198,7 +204,7 @@ class TestProductTypePrice(BaseApiTestCase):
         )
 
     def test_partial_update_price(self):
-        price = self.create_price()
+        price = self._create_price()
         PriceOptionFactory.create(price=price)
 
         data = {"valid_from": datetime.date(2024, 1, 4)}
@@ -214,7 +220,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.count(), 1)
 
     def test_partial_update_price_updating_and_removing_options(self):
-        price = self.create_price()
+        price = self._create_price()
         option_to_be_updated = PriceOptionFactory.create(price=price)
         PriceOptionFactory.create(price=price)
 
@@ -237,7 +243,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.first().amount, Decimal("20"))
 
     def test_partial_update_price_creating_and_deleting_options(self):
-        price = self.create_price()
+        price = self._create_price()
         PriceOptionFactory.create(price=price)
 
         data = {
@@ -257,7 +263,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.first().description, "test")
 
     def test_partial_update_with_multiple_errors(self):
-        price = self.create_price()
+        price = self._create_price()
         option = PriceOptionFactory.create(price=price)
         option_of_other_price = PriceOptionFactory.create(price=PriceFactory.create())
         non_existing_option = uuid.uuid4()
@@ -299,7 +305,7 @@ class TestProductTypePrice(BaseApiTestCase):
         )
 
     def test_read_prices(self):
-        price = self.create_price()
+        price = self._create_price()
 
         response = self.get()
 
@@ -307,14 +313,14 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(response.data, [price_to_dict(price)])
 
     def test_read_price(self):
-        price = self.create_price()
+        price = self._create_price()
 
         response = self.get(price.id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, price_to_dict(price))
 
     def test_delete_price(self):
-        price = self.create_price()
+        price = self._create_price()
         response = self.delete(price.id)
 
         self.assertEqual(response.status_code, 204)

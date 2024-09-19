@@ -12,9 +12,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -35,9 +33,7 @@ paths:
               $ref: '#/components/schemas/Category'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -58,9 +54,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -88,9 +82,7 @@ paths:
               $ref: '#/components/schemas/Question'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -118,9 +110,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -153,9 +143,7 @@ paths:
               $ref: '#/components/schemas/Question'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -187,9 +175,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedQuestion'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -216,9 +202,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -236,9 +220,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -265,9 +247,7 @@ paths:
               $ref: '#/components/schemas/Category'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -293,9 +273,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCategory'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -316,9 +294,7 @@ paths:
       tags:
         - categories
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -328,9 +304,7 @@ paths:
       tags:
         - conditions
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -351,9 +325,7 @@ paths:
               $ref: '#/components/schemas/Condition'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -375,9 +347,7 @@ paths:
       tags:
         - conditions
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -404,9 +374,7 @@ paths:
               $ref: '#/components/schemas/Condition'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -432,9 +400,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCondition'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -455,9 +421,7 @@ paths:
       tags:
         - conditions
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -467,9 +431,7 @@ paths:
       tags:
         - products
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -490,9 +452,7 @@ paths:
               $ref: '#/components/schemas/Product'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -514,9 +474,7 @@ paths:
       tags:
         - products
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -543,9 +501,7 @@ paths:
               $ref: '#/components/schemas/ProductUpdate'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -571,9 +527,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedProductUpdate'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -594,9 +548,7 @@ paths:
       tags:
         - products
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -606,9 +558,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -629,9 +579,7 @@ paths:
               $ref: '#/components/schemas/ProductType'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -653,9 +601,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -682,9 +628,7 @@ paths:
               $ref: '#/components/schemas/ProductType'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -710,9 +654,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedProductType'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -733,9 +675,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -753,9 +693,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -784,9 +722,7 @@ paths:
               $ref: '#/components/schemas/Field'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -815,9 +751,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -851,9 +785,7 @@ paths:
               $ref: '#/components/schemas/Field'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -886,9 +818,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedField'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -916,9 +846,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -936,9 +864,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -967,9 +893,7 @@ paths:
               $ref: '#/components/schemas/Link'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -998,9 +922,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1034,9 +956,7 @@ paths:
               $ref: '#/components/schemas/Link'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1069,9 +989,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedLink'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1099,9 +1017,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -1119,9 +1035,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1150,9 +1064,7 @@ paths:
               $ref: '#/components/schemas/Price'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -1181,9 +1093,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1217,9 +1127,7 @@ paths:
               $ref: '#/components/schemas/Price'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1252,9 +1160,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedPrice'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1282,9 +1188,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -1301,9 +1205,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1331,9 +1233,7 @@ paths:
               $ref: '#/components/schemas/Question'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -1361,9 +1261,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1396,9 +1294,7 @@ paths:
               $ref: '#/components/schemas/Question'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1430,9 +1326,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedQuestion'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1459,9 +1353,7 @@ paths:
       tags:
         - producttypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -1471,9 +1363,7 @@ paths:
       tags:
         - tags
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1494,9 +1384,7 @@ paths:
               $ref: '#/components/schemas/Tag'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -1518,9 +1406,7 @@ paths:
       tags:
         - tags
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1547,9 +1433,7 @@ paths:
               $ref: '#/components/schemas/Tag'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1575,9 +1459,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedTag'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1598,9 +1480,7 @@ paths:
       tags:
         - tags
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -1610,9 +1490,7 @@ paths:
       tags:
         - tagtypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1633,9 +1511,7 @@ paths:
               $ref: '#/components/schemas/TagType'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '201':
           content:
@@ -1657,9 +1533,7 @@ paths:
       tags:
         - tagtypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1686,9 +1560,7 @@ paths:
               $ref: '#/components/schemas/TagType'
         required: true
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1714,9 +1586,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedTagType'
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '200':
           content:
@@ -1737,9 +1607,7 @@ paths:
       tags:
         - tagtypes
       security:
-        - cookieAuth: [ ]
-        - basicAuth: [ ]
-        - { }
+        - tokenAuth: [ ]
       responses:
         '204':
           description: No response body
@@ -1926,6 +1794,19 @@ components:
         - description
         - id
         - name
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        file:
+          type: string
+          format: uri
+      required:
+        - file
+        - id
     Link:
       type: object
       properties:
@@ -2183,6 +2064,11 @@ components:
           items:
             $ref: '#/components/schemas/Link'
           readOnly: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+          readOnly: true
         published:
           type: boolean
           description: Whether the object is accessible through the API.
@@ -2228,6 +2114,24 @@ components:
             type: string
             maxLength: 100
           description: List of keywords for search
+        organisations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Organisations which provides this product
+        contacts:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The contacts responsible for the product
+        locations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Locations where the product is available at.
     PatchedProductUpdate:
       type: object
       properties:
@@ -2497,6 +2401,11 @@ components:
           items:
             $ref: '#/components/schemas/Link'
           readOnly: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+          readOnly: true
         published:
           type: boolean
           description: Whether the object is accessible through the API.
@@ -2542,6 +2451,24 @@ components:
             type: string
             maxLength: 100
           description: List of keywords for search
+        organisations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Organisations which provides this product
+        contacts:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The contacts responsible for the product
+        locations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Locations where the product is available at.
       required:
         - categories
         - category_ids
@@ -2549,6 +2476,7 @@ components:
         - content
         - created_on
         - fields
+        - files
         - id
         - links
         - name
@@ -2722,6 +2650,24 @@ components:
             type: string
             maxLength: 100
           description: List of keywords for search
+        organisations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Organisations which provides this product
+        contacts:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The contacts responsible for the product
+        locations:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Locations where the product is available at.
       required:
         - content
         - created_on
@@ -2836,10 +2782,8 @@ components:
         - id
         - name
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    cookieAuth:
+    tokenAuth:
       type: apiKey
-      in: cookie
-      name: open_producten_sessionid
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
