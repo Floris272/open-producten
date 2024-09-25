@@ -58,7 +58,7 @@ class TestProductTypeTag(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [tag_to_dict(tag)])
+        self.assertEqual(response.data["results"], [tag_to_dict(tag)])
 
     def test_read_tag(self):
         tag = TagFactory.create()

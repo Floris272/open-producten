@@ -99,7 +99,7 @@ class TestProductTypeField(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [field_to_dict(field)])
+        self.assertEqual(response.data["results"], [field_to_dict(field)])
 
     def test_read_field(self):
         field = self._create_field()
