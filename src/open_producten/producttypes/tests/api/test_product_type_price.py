@@ -44,13 +44,20 @@ class TestProductTypePrice(BaseApiTestCase):
         response = APIClient().get(self.path)
         self.assertEqual(response.status_code, 401)
 
-    def test_create_price(self):
+    def test_create_price_without_options(self):
         response = self.post(self.price_data)
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(Price.objects.count(), 1)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            self.product_type.prices.first().valid_from, self.price_data["valid_from"]
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string="At least one option is required",
+                        code="invalid",
+                    )
+                ]
+            },
         )
 
     def test_create_price_with_price_option(self):
@@ -69,7 +76,7 @@ class TestProductTypePrice(BaseApiTestCase):
             Decimal("74.99"),
         )
 
-    def test_update_price_removing_options(self):
+    def test_update_price_removing_all_options(self):
         price = self._create_price()
         PriceOptionFactory.create(price=price)
         PriceOptionFactory.create(price=price)
@@ -81,9 +88,18 @@ class TestProductTypePrice(BaseApiTestCase):
 
         response = self.put(price.id, data)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Price.objects.count(), 1)
-        self.assertEqual(PriceOption.objects.count(), 0)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data,
+            {
+                "options": [
+                    ErrorDetail(
+                        string="At least one option is required",
+                        code="invalid",
+                    )
+                ]
+            },
+        )
 
     def test_update_price_updating_and_removing_options(self):
         price = self._create_price()
@@ -327,3 +343,74 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Price.objects.count(), 0)
         self.assertEqual(PriceOption.objects.count(), 0)
+
+    def test_get_current_prices_when_product_type_has_no_prices(self):
+        response = self.client.get("/api/v1/producttypes/current_prices/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.data,
+            [
+                {
+                    "id": str(self.product_type.id),
+                    "name": self.product_type.name,
+                    "upl_name": self.product_type.uniform_product_name.name,
+                    "upl_uri": self.product_type.uniform_product_name.url,
+                    "current_price": None,
+                },
+            ],
+        )
+
+    def test_get_current_prices_when_product_type_only_has_price_in_future(self):
+        PriceFactory.create(
+            product_type=self.product_type, valid_from=datetime.date(2024, 2, 2)
+        )
+
+        response = self.client.get("/api/v1/producttypes/current_prices/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.data,
+            [
+                {
+                    "id": str(self.product_type.id),
+                    "name": self.product_type.name,
+                    "upl_name": self.product_type.uniform_product_name.name,
+                    "upl_uri": self.product_type.uniform_product_name.url,
+                    "current_price": None,
+                },
+            ],
+        )
+
+    def test_get_current_prices_when_product_type_has_current_price(self):
+        price = PriceFactory.create(
+            product_type=self.product_type,
+            valid_from=datetime.date(2024, 1, 1),
+        )
+
+        option = PriceOptionFactory.create(price=price)
+
+        response = self.client.get("/api/v1/producttypes/current_prices/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.data,
+            [
+                {
+                    "id": str(self.product_type.id),
+                    "name": self.product_type.name,
+                    "upl_name": self.product_type.uniform_product_name.name,
+                    "upl_uri": self.product_type.uniform_product_name.url,
+                    "current_price": {
+                        "id": str(price.id),
+                        "valid_from": "2024-01-01",
+                        "options": [
+                            {
+                                "amount": str(option.amount),
+                                "description": option.description,
+                                "id": str(option.id),
+                            }
+                        ],
+                    },
+                },
+            ],
+        )

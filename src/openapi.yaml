@@ -9,6 +9,13 @@ paths:
   /api/v1/categories/:
     get:
       operationId: categories_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - categories
       security:
@@ -18,9 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/PaginatedCategoryList'
           description: ''
     post:
       operationId: categories_create
@@ -51,6 +56,12 @@ paths:
             type: string
             format: uuid
           required: true
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - categories
       security:
@@ -60,9 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Question'
+                $ref: '#/components/schemas/PaginatedQuestionList'
           description: ''
     post:
       operationId: categories_questions_create
@@ -301,6 +310,13 @@ paths:
   /api/v1/conditions/:
     get:
       operationId: conditions_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - conditions
       security:
@@ -310,9 +326,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Condition'
+                $ref: '#/components/schemas/PaginatedConditionList'
           description: ''
     post:
       operationId: conditions_create
@@ -428,6 +442,13 @@ paths:
   /api/v1/products/:
     get:
       operationId: products_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - products
       security:
@@ -437,9 +458,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/PaginatedProductList'
           description: ''
     post:
       operationId: products_create
@@ -555,6 +574,13 @@ paths:
   /api/v1/producttypes/:
     get:
       operationId: producttypes_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - producttypes
       security:
@@ -564,9 +590,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProductType'
+                $ref: '#/components/schemas/PaginatedProductTypeList'
           description: ''
     post:
       operationId: producttypes_create
@@ -683,6 +707,12 @@ paths:
     get:
       operationId: producttypes_fields_list
       parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
         - in: path
           name: product_type_id
           schema:
@@ -699,9 +729,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Field'
+                $ref: '#/components/schemas/PaginatedFieldList'
           description: ''
     post:
       operationId: producttypes_fields_create
@@ -854,6 +882,12 @@ paths:
     get:
       operationId: producttypes_links_list
       parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
         - in: path
           name: product_type_id
           schema:
@@ -870,9 +904,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Link'
+                $ref: '#/components/schemas/PaginatedLinkList'
           description: ''
     post:
       operationId: producttypes_links_create
@@ -1025,6 +1057,12 @@ paths:
     get:
       operationId: producttypes_prices_list
       parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
         - in: path
           name: product_type_id
           schema:
@@ -1041,9 +1079,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Price'
+                $ref: '#/components/schemas/PaginatedPriceList'
           description: ''
     post:
       operationId: producttypes_prices_create
@@ -1196,6 +1232,12 @@ paths:
     get:
       operationId: producttypes_questions_list
       parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
         - in: path
           name: product_type_id
           schema:
@@ -1211,9 +1253,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Question'
+                $ref: '#/components/schemas/PaginatedQuestionList'
           description: ''
     post:
       operationId: producttypes_questions_create
@@ -1357,9 +1397,30 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/producttypes/current_prices/:
+    get:
+      operationId: producttypes_current_prices_retrieve
+      tags:
+        - producttypes
+      security:
+        - tokenAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTypeCurrentPrice'
+          description: ''
   /api/v1/tags/:
     get:
       operationId: tags_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - tags
       security:
@@ -1369,9 +1430,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/PaginatedTagList'
           description: ''
     post:
       operationId: tags_create
@@ -1487,6 +1546,13 @@ paths:
   /api/v1/tagtypes/:
     get:
       operationId: tagtypes_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       tags:
         - tagtypes
       security:
@@ -1496,9 +1562,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TagType'
+                $ref: '#/components/schemas/PaginatedTagTypeList'
           description: ''
     post:
       operationId: tagtypes_create
@@ -1827,6 +1891,236 @@ components:
         - id
         - name
         - url
+    PaginatedCategoryList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    PaginatedConditionList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+    PaginatedFieldList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+    PaginatedLinkList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+    PaginatedPriceList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    PaginatedProductList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    PaginatedProductTypeList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductType'
+    PaginatedQuestionList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    PaginatedTagList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    PaginatedTagTypeList:
+      type: object
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagType'
     PatchedCategory:
       type: object
       properties:
@@ -2486,6 +2780,36 @@ components:
         - uniform_product_name
         - uniform_product_name_id
         - updated_on
+    ProductTypeCurrentPrice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          description: Name of the product type
+          maxLength: 100
+        upl_name:
+          type: string
+          description: Uniform product name
+          readOnly: true
+        upl_uri:
+          type: string
+          format: uri
+          description: Url to the upn definition.
+          readOnly: true
+        current_price:
+          allOf:
+            - $ref: '#/components/schemas/Price'
+          nullable: true
+      required:
+        - current_price
+        - id
+        - name
+        - upl_name
+        - upl_uri
     ProductUpdate:
       type: object
       properties:

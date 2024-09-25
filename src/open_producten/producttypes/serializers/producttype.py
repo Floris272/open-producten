@@ -130,3 +130,13 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class ProductTypeCurrentPriceSerializer(serializers.ModelSerializer):
+    upl_uri = serializers.ReadOnlyField(source="uniform_product_name.url")
+    upl_name = serializers.ReadOnlyField(source="uniform_product_name.name")
+    current_price = PriceSerializer(allow_null=True)
+
+    class Meta:
+        model = ProductType
+        fields = ("id", "name", "upl_name", "upl_uri", "current_price")
