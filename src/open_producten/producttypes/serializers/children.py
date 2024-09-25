@@ -33,6 +33,11 @@ class PriceSerializer(serializers.ModelSerializer):
         model = Price
         exclude = ("product_type",)
 
+    def validate_options(self, options):
+        if len(options) == 0:
+            raise serializers.ValidationError("At least one option is required")
+        return options
+
     @transaction.atomic()
     def create(self, validated_data):
         options = validated_data.pop("options")
