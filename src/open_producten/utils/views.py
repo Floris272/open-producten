@@ -3,6 +3,8 @@ from django.template import TemplateDoesNotExist, loader
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.defaults import ERROR_500_TEMPLATE_NAME
 
+from rest_framework.viewsets import ModelViewSet
+
 
 @requires_csrf_token
 def server_error(request, template_name=ERROR_500_TEMPLATE_NAME):
@@ -23,3 +25,8 @@ def server_error(request, template_name=ERROR_500_TEMPLATE_NAME):
         )
     context = {"request": request}
     return http.HttpResponseServerError(template.render(context))
+
+
+class OrderedModelViewSet(ModelViewSet):
+    def get_queryset(self):
+        return self.queryset.order_by("id")

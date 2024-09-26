@@ -1,13 +1,12 @@
-from rest_framework.viewsets import ModelViewSet
-
 from open_producten.products.models import Product
 from open_producten.products.serializers.product import (
     ProductSerializer,
     ProductUpdateSerializer,
 )
+from open_producten.utils.views import OrderedModelViewSet
 
 
-class ProductViewSet(ModelViewSet):
+class ProductViewSet(OrderedModelViewSet):
     queryset = Product.objects.all()
     lookup_url_field = "id"
 
