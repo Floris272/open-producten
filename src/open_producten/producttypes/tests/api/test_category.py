@@ -324,6 +324,7 @@ class TestCategoryViewSet(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
         self.assertEqual(response.data["results"], [category_to_dict(category)])
 
     def test_read_category(self):

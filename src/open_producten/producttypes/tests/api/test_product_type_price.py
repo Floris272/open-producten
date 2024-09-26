@@ -310,6 +310,7 @@ class TestProductTypePrice(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
         self.assertEqual(response.data["results"], [price_to_dict(price)])
 
     def test_read_price(self):

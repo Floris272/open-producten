@@ -55,6 +55,7 @@ class TestProductTypeTagType(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
         self.assertEqual(response.data["results"], [tag_type_to_dict(tag_type)])
 
     def test_read_tag_type(self):
