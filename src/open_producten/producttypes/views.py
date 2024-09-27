@@ -36,7 +36,11 @@ class ProductTypeViewSet(OrderedModelViewSet):
     serializer_class = ProductTypeSerializer
     lookup_url_kwarg = "id"
 
-    @action(detail=False, serializer_class=ProductTypeCurrentPriceSerializer)
+    @action(
+        detail=False,
+        serializer_class=ProductTypeCurrentPriceSerializer,
+        url_path="current-prices",
+    )
     def current_prices(self, request):
         product_types = ProductType.objects.all()
         serializer = ProductTypeCurrentPriceSerializer(product_types, many=True)

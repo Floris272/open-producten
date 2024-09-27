@@ -345,7 +345,7 @@ class TestProductTypePrice(BaseApiTestCase):
         self.assertEqual(PriceOption.objects.count(), 0)
 
     def test_get_current_prices_when_product_type_has_no_prices(self):
-        response = self.client.get("/api/v1/producttypes/current_prices/")
+        response = self.client.get("/api/v1/producttypes/current-prices/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.data,
@@ -365,7 +365,7 @@ class TestProductTypePrice(BaseApiTestCase):
             product_type=self.product_type, valid_from=datetime.date(2024, 2, 2)
         )
 
-        response = self.client.get("/api/v1/producttypes/current_prices/")
+        response = self.client.get("/api/v1/producttypes/current-prices/")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -389,7 +389,7 @@ class TestProductTypePrice(BaseApiTestCase):
 
         option = PriceOptionFactory.create(price=price)
 
-        response = self.client.get("/api/v1/producttypes/current_prices/")
+        response = self.client.get("/api/v1/producttypes/current-prices/")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
