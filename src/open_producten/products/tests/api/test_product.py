@@ -29,9 +29,9 @@ def product_to_dict(product):
         product.product_type,
         exclude=("categories", "conditions", "tags", "related_product_types"),
     )
-    product_dict["product_type"]["uniform_product_name"] = model_to_dict_with_id(
-        product.product_type.uniform_product_name
-    )
+    product_dict["product_type"][
+        "uniform_product_name"
+    ] = product.product_type.uniform_product_name.uri
 
     product_dict["product_type"]["created_on"] = str(
         product.product_type.created_on.astimezone().isoformat()

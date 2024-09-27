@@ -14,7 +14,6 @@ from ..models import (
     Question,
     Tag,
     TagType,
-    UniformProductName,
 )
 
 
@@ -136,12 +135,6 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = "__all__"
-
-
-class UniformProductNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UniformProductName
         fields = "__all__"
 
 

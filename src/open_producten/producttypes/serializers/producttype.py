@@ -13,7 +13,6 @@ from .children import (
     PriceSerializer,
     QuestionSerializer,
     TagSerializer,
-    UniformProductNameSerializer,
 )
 
 
@@ -37,13 +36,9 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         many=True, queryset=ProductType.objects.all(), default=[]
     )
 
-    uniform_product_name_id = serializers.PrimaryKeyRelatedField(
-        queryset=UniformProductName.objects.all(),
-        write_only=True,
-        source="uniform_product_name",
+    uniform_product_name = serializers.SlugRelatedField(
+        slug_field="uri", queryset=UniformProductName.objects.all()
     )
-
-    uniform_product_name = UniformProductNameSerializer(read_only=True)
 
     conditions = ConditionSerializer(many=True, read_only=True)
     condition_ids = serializers.PrimaryKeyRelatedField(
@@ -133,7 +128,7 @@ class ProductTypeSerializer(serializers.ModelSerializer):
 
 
 class ProductTypeCurrentPriceSerializer(serializers.ModelSerializer):
-    upl_uri = serializers.ReadOnlyField(source="uniform_product_name.url")
+    upl_uri = serializers.ReadOnlyField(source="uniform_product_name.uri")
     upl_name = serializers.ReadOnlyField(source="uniform_product_name.name")
     current_price = PriceSerializer(allow_null=True)
 

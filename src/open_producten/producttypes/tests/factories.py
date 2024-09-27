@@ -18,7 +18,7 @@ from ..models import (
 
 class UniformProductNameFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"upn {n}")
-    url = factory.Faker("url")
+    uri = factory.Faker("url")
 
     class Meta:
         model = UniformProductName

@@ -51,9 +51,7 @@ def product_type_to_dict(product_type):
     product_type_dict["updated_on"] = str(
         product_type.updated_on.astimezone().isoformat()
     )
-    product_type_dict["uniform_product_name"] = model_to_dict_with_id(
-        product_type.uniform_product_name
-    )
+    product_type_dict["uniform_product_name"] = product_type.uniform_product_name.uri
     product_type_dict["icon"] = None
     product_type_dict["image"] = None
     return product_type_dict
@@ -70,7 +68,7 @@ class TestProducttypeViewSet(BaseApiTestCase):
             "name": "test-product-type",
             "summary": "test",
             "content": "test test",
-            "uniform_product_name_id": upn.id,
+            "uniform_product_name": upn.uri,
             "category_ids": [category.id],
         }
 
