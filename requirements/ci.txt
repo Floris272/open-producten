@@ -352,7 +352,7 @@ face==20.1.1
     #   glom
 factory-boy==3.3.1
     # via -r requirements/test-tools.in
-faker==27.0.0
+faker==30.1.0
     # via factory-boy
 flake8==7.1.1
     # via -r requirements/test-tools.in
