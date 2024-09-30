@@ -59,7 +59,8 @@ class TestProductTypeLink(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [link_to_dict(link)])
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"], [link_to_dict(link)])
 
     def test_read_link(self):
         link = self._create_link()

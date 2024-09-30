@@ -108,6 +108,10 @@
                 "permission"
             ],
             [
+                "authtoken",
+                "tokenproxy"
+            ],
+            [
                 "otp_static",
                 "staticdevice"
             ],
@@ -150,24 +154,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 5,
-        "translations": {
-            "nl": "Integraties"
-        },
-        "name": "Integrations",
-        "slug": "integrations",
-        "models": [
-            [
-                "vng_api_common",
-                "jwtsecret"
-            ]
-        ]
-    }
-},
-{
-    "model": "admin_index.appgroup",
-    "fields": {
-        "order": 7,
+        "order": 6,
         "translations": {
             "nl": "Misc"
         },
@@ -219,6 +206,10 @@
                 "apicredential"
             ],
             [
+                "vng_api_common",
+                "jwtsecret"
+            ],
+            [
                 "zgw_consumers",
                 "certificate"
             ],
@@ -236,7 +227,7 @@
 {
     "model": "admin_index.appgroup",
     "fields": {
-        "order": 6,
+        "order": 5,
         "translations": {
             "nl": "logs"
         },

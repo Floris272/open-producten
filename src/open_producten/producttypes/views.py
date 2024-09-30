@@ -1,7 +1,5 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.viewsets import ModelViewSet
-
 from open_producten.producttypes.models import (
     Category,
     Condition,
@@ -24,21 +22,22 @@ from open_producten.producttypes.serializers.children import (
     TagTypeSerializer,
 )
 from open_producten.producttypes.serializers.producttype import ProductTypeSerializer
+from open_producten.utils.views import OrderedModelViewSet
 
 
-class ProductTypeViewSet(ModelViewSet):
+class ProductTypeViewSet(OrderedModelViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
     lookup_url_kwarg = "id"
 
 
-class ProductTypeChildViewSet(ModelViewSet):
+class ProductTypeChildViewSet(OrderedModelViewSet):
 
     def get_product_type(self):
         return get_object_or_404(ProductType, id=self.kwargs["product_type_id"])
 
     def get_queryset(self):
-        return self.queryset.filter(product_type=self.get_product_type())
+        return super().get_queryset().filter(product_type=self.get_product_type())
 
     def perform_create(self, serializer):
         serializer.save(product_type=self.get_product_type())
@@ -68,19 +67,19 @@ class ProductTypeQuestionViewSet(ProductTypeChildViewSet):
     lookup_url_kwarg = "question_id"
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(OrderedModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_url_kwarg = "id"
 
 
-class CategoryChildViewSet(ModelViewSet):
+class CategoryChildViewSet(OrderedModelViewSet):
 
     def get_category(self):
         return get_object_or_404(Category, id=self.kwargs["category_id"])
 
     def get_queryset(self):
-        return self.queryset.filter(category=self.get_category())
+        return super().get_queryset().filter(category=self.get_category())
 
     def perform_create(self, serializer):
         serializer.save(category=self.get_category())
@@ -92,19 +91,22 @@ class CategoryQuestionViewSet(CategoryChildViewSet):
     lookup_url_kwarg = "question_id"
 
 
-class ConditionViewSet(ModelViewSet):
+class ConditionViewSet(OrderedModelViewSet):
     queryset = Condition.objects.all()
     serializer_class = ConditionSerializer
     lookup_url_kwarg = "id"
 
 
-class TagViewSet(ModelViewSet):
+class TagViewSet(OrderedModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     lookup_field = "id"
 
 
-class TagTypeViewSet(ModelViewSet):
+class TagTypeViewSet(OrderedModelViewSet):
     queryset = TagType.objects.all()
     serializer_class = TagTypeSerializer
     lookup_field = "id"
+
+    def get_queryset(self):
+        return self.queryset.order_by("id")

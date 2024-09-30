@@ -61,7 +61,8 @@ class TestCategoryQuestion(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [question_to_dict(question)])
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"], [question_to_dict(question)])
 
     def test_read_question(self):
         question = self._create_question()

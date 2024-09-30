@@ -412,7 +412,8 @@ class TestProduct(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [product_to_dict(product)])
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"], [product_to_dict(product)])
 
     def test_read_product(self):
         product = self._create_product()

@@ -401,7 +401,8 @@ class TestProducttypeViewSet(BaseApiTestCase):
         response = self.get()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, [product_type_to_dict(product_type)])
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"], [product_type_to_dict(product_type)])
 
     def test_read_product_type(self):
         product_type = ProductTypeFactory.create()
