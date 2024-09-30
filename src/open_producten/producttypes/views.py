@@ -1,5 +1,8 @@
 from django.shortcuts import get_object_or_404
 
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from open_producten.producttypes.models import (
     Category,
     Condition,
@@ -21,7 +24,10 @@ from open_producten.producttypes.serializers.children import (
     TagSerializer,
     TagTypeSerializer,
 )
-from open_producten.producttypes.serializers.producttype import ProductTypeSerializer
+from open_producten.producttypes.serializers.producttype import (
+    ProductTypeCurrentPriceSerializer,
+    ProductTypeSerializer,
+)
 from open_producten.utils.views import OrderedModelViewSet
 
 
@@ -29,6 +35,16 @@ class ProductTypeViewSet(OrderedModelViewSet):
     queryset = ProductType.objects.all()
     serializer_class = ProductTypeSerializer
     lookup_url_kwarg = "id"
+
+    @action(
+        detail=False,
+        serializer_class=ProductTypeCurrentPriceSerializer,
+        url_path="current-prices",
+    )
+    def current_prices(self, request):
+        product_types = ProductType.objects.all()
+        serializer = ProductTypeCurrentPriceSerializer(product_types, many=True)
+        return Response(serializer.data)
 
 
 class ProductTypeChildViewSet(OrderedModelViewSet):
@@ -107,6 +123,3 @@ class TagTypeViewSet(OrderedModelViewSet):
     queryset = TagType.objects.all()
     serializer_class = TagTypeSerializer
     lookup_field = "id"
-
-    def get_queryset(self):
-        return self.queryset.order_by("id")
