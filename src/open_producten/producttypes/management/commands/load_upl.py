@@ -1,9 +1,68 @@
-from ..parsers import ParserCommand
-from ..utils import load_upn
+from dataclasses import dataclass
+
+from django.core.management.base import BaseCommand, CommandError
+
+from open_producten.producttypes.models import (
+    UniformProductName as UniformProductNameModel,
+)
+
+from ..parsers import CsvParser
 
 
-class Command(ParserCommand):
-    plural_object_name = "upn"
+@dataclass
+class UniformProductName:
+    name: str
+    uri: str
+
+
+class Command(BaseCommand):
+
+    def __init__(self):
+        self.help = "Load upn to the database from a given XML/CSV file."
+        self.parser = CsvParser()
+        super().__init__()
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "filename",
+            help="The name of the file to be imported.",
+        )
 
     def handle(self, **options):
-        super().handle(load_upn, **options)
+        filename = options.pop("filename")
+
+        self.stdout.write(f"Importing upn from {filename}...")
+
+        try:
+            data = self.parser.parse(filename)
+            upn_objects = [
+                UniformProductName(name=entry["UniformeProductnaam"], uri=entry["URI"])
+                for entry in data
+            ]
+            created_count = self.load_upl(upn_objects)
+
+        except KeyError as e:
+            raise CommandError(f"{str(e)} does not exist in csv.")
+        except Exception as e:
+            raise CommandError(str(e))
+
+        self.stdout.write(f"Done ({created_count} objects).")
+
+    def load_upl(self, data: list[UniformProductName]) -> int:
+        count = 0
+        upn_updated_list = []
+
+        for obj in data:
+            upn, created = UniformProductNameModel.objects.update_or_create(
+                uri=obj.uri,
+                defaults={"name": obj.name, "is_deleted": False},
+            )
+            upn_updated_list.append(upn.id)
+
+            if created:
+                count += 1
+
+        UniformProductNameModel.objects.exclude(id__in=upn_updated_list).update(
+            is_deleted=True,
+        )
+        return count
