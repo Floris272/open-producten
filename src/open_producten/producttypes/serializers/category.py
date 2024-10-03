@@ -3,14 +3,16 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from open_producten.producttypes.models import Category, ProductType
+from open_producten.producttypes.models import Category, ProductType, UniformProductName
 from open_producten.utils.serializers import build_array_duplicates_error_message
 
-from .children import QuestionSerializer, UniformProductNameSerializer
+from .children import QuestionSerializer
 
 
 class SimpleProductTypeSerializer(serializers.ModelSerializer):
-    uniform_product_name = UniformProductNameSerializer()
+    uniform_product_name = serializers.SlugRelatedField(
+        slug_field="uri", queryset=UniformProductName.objects.all()
+    )
 
     class Meta:
         model = ProductType
