@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - stable/*
     tags:
       - '*'
   pull_request:
@@ -17,33 +16,6 @@ env:
   DOCKER_BUILDKIT: '1'
 
 jobs:
-
-  setup:
-    name: Set up the build variables
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${% templatetag openvariable %} steps.vars.outputs.tag {% templatetag closevariable %}
-      git_hash: ${% templatetag openvariable %} steps.vars.outputs.git_hash {% templatetag closevariable %}
-
-    steps:
-      - name: Extract version information
-        id: vars
-        run: |
-          # Strip git ref prefix from version
-          VERSION=$(echo "${% templatetag openvariable %} github.ref {% templatetag closevariable %}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name (if present at all)
-          [[ "${% templatetag openvariable %} github.ref {% templatetag closevariable %}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
-
-          # PRs result in version 'merge' -> transform that into 'latest'
-          [ "$VERSION" == "merge" ] && VERSION=latest
-
-          echo "tag=${VERSION}" >> $GITHUB_OUTPUT
-          echo "git_hash=${GITHUB_SHA}" >> $GITHUB_OUTPUT
-
   tests:
     name: Run the Django test suite
     runs-on: ubuntu-latest
@@ -56,21 +28,17 @@ jobs:
         ports:
           - 5432:5432
         # Needed because the postgres container does not provide a healthcheck
-        options: >-
-          --name postgres
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options:
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
           --name postgres
       redis:
         image: redis:6
         ports:
           - 6379:6379
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Set up backend environment
-        uses: maykinmedia/setup-django-backend@v1.3
+        uses: maykinmedia/setup-django-backend@v1
         with:
           python-version: '3.11'
           optimize-postgres: 'yes'
@@ -79,9 +47,15 @@ jobs:
           # apt-packages: 'gettext postgresql-client'  # the default
           # npm-ci-flags: '--legacy-peer-deps' -> preferably use a .npmrc file
 
+      # Any additional services -> create docker-compose setups in a (new) `docker`
+      # subdirectory.
+      # - name: Start CI docker services
+      #   run: |
+      #     docker-compose -f docker-compose.ci.yml up -d
+      #   working-directory: docker
+
       - name: Run tests
         run: |
-          python src/manage.py compilemessages
           python src/manage.py collectstatic --noinput --link
           coverage run src/manage.py test src
         env:
@@ -111,74 +85,116 @@ jobs:
   #   runs-on: ubuntu-latest
 
   #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: maykinmedia/setup-django-backend@v1.3
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-python@v4
   #       with:
-  #         python-version: '3.11'
-  #         setup-node: 'no'
-  #         # apt-packages: 'gettext postgresql-client'  # the default
+  #         python-version: '3.9'
+
+  #     # - name: Install OS dependencies
+  #     #   run: |
+  #     #     sudo apt-get update
+  #     #     sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+
+  #     - name: Install dependencies
+  #       run: |
+  #         pip install -r requirements/ci.txt
 
   #     - name: Build and test docs
-  #       run: |
-  #         export OPENSSL_CONF=$(pwd)/openssl.conf
-  #         pytest check_sphinx.py -v --tb=auto
   #       working-directory: docs
+  #       run: pytest check_sphinx.py -v --tb=auto
 
-  docker_build:
+  docker:
+    needs: tests
     name: Build Docker image
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${% templatetag openvariable %} steps.image_build.outputs.image_tag {% templatetag closevariable %}
-
-    needs:
-      - setup
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Build the production Docker image
-        id: image_build
+      - name: Determine tag/commit hash
+        id: vars
         run: |
-          image_tag="$IMAGE_NAME:$RELEASE_VERSION"
-          echo "image_tag=${image_tag}" >> $GITHUB_OUTPUT
-          docker build . \
-            --tag $image_tag \
-            --build-arg COMMIT_HASH=${% templatetag openvariable %} needs.setup.outputs.git_hash {% templatetag closevariable %} \
-            --build-arg RELEASE=${% templatetag openvariable %} needs.setup.outputs.tag {% templatetag closevariable %} \
-        env:
-          RELEASE_VERSION: ${% templatetag openvariable %} needs.setup.outputs.tag {% templatetag closevariable %}
-
-      - run: docker image save -o image.tar $IMAGE_NAME:${% templatetag openvariable %} needs.setup.outputs.tag {% templatetag closevariable %}
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name (if present at all)
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo "tag=${VERSION}" >> $GITHUB_OUTPUT
+          echo "git_hash=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+      - name: Build the Docker image
+        run: |
+          docker build \
+            --tag $IMAGE_NAME:${{ steps.vars.outputs.tag }} \
+            --build-arg COMMIT_HASH=${{ steps.vars.outputs.git_hash }} \
+            --build-arg RELEASE=${{ steps.vars.outputs.tag }} \
+            .
+      - run: docker image save -o image.tar $IMAGE_NAME:${{ steps.vars.outputs.tag }}
       - name: Store image artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: docker-image
           path: image.tar
           retention-days: 1
 
-  docker_push:
+  # image_scan:
+  #   runs-on: ubuntu-latest
+  #   name: Scan docker image
+  #   needs:
+  #     - docker
+
+  #   steps:
+  #     - name: Download built image
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: docker-image
+  #     - name: Scan image with Trivy
+  #       uses: aquasecurity/trivy-action@master
+  #       with:
+  #         input: /github/workspace/image.tar  # from download-artifact
+  #         format: 'sarif'
+  #         output: 'trivy-results-docker.sarif'
+  #         ignore-unfixed: true
+  #     - name: Upload results to GH Security tab
+  #       uses: github/codeql-action/upload-sarif@v3
+  #       with:
+  #         sarif_file: 'trivy-results-docker.sarif'
+
+  publish:
     needs:
       - tests
-      - docker_build
+      - docker
 
     name: Push Docker image
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' # Exclude PRs
+    if: github.event_name == 'push'  # exclude PRs
 
     steps:
+      - uses: actions/checkout@v4
       - name: Download built image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: docker-image
+
+      - name: Determine tag/commit hash
+        id: vars
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name (if present at all)
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          echo "tag=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Load image
         run: |
           docker image load -i image.tar
 
       - name: Log into registry
-        run:
-          echo "${% templatetag openvariable %} secrets.DOCKER_TOKEN {% templatetag closevariable %}" | docker login -u ${% templatetag openvariable %} secrets.DOCKER_USERNAME {% templatetag closevariable %}
-          --password-stdin
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Push the Docker image (production)
-        run: docker push ${% templatetag openvariable %} needs.docker_build.outputs.image_tag {% templatetag closevariable %}
+      - name: Push the Docker image
+        run: docker push $IMAGE_NAME:${{ steps.vars.outputs.tag }}
