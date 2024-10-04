@@ -118,7 +118,7 @@ jobs:
           # Strip "v" prefix from tag name (if present at all)
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          [ "$VERSION" == "main" ] && VERSION=latest
           echo "tag=${VERSION}" >> $GITHUB_OUTPUT
           echo "git_hash=${GITHUB_SHA}" >> $GITHUB_OUTPUT
       - name: Build the Docker image
@@ -185,7 +185,7 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          [ "$VERSION" == "main" ] && VERSION=latest
 
           echo "tag=${VERSION}" >> $GITHUB_OUTPUT
 
