@@ -68,7 +68,7 @@ jobs:
       - name: Publish coverage report
         uses: codecov/codecov-action@v4.0.1
         with:
-          token: $
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       # API projects: implement the necessary scripts for this. You can take a look
       # at open-forms for inspiration, using drf-spectacular.
