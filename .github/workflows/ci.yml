@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: maykinmedia/open-producten
+  IMAGE_NAME: floris272/open-producten-test
   DJANGO_SETTINGS_MODULE: open_producten.conf.ci
   DOCKER_BUILDKIT: '1'
 
